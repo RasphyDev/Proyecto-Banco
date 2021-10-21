@@ -6,6 +6,8 @@ Un simulador de cajero automatico de un banco recreado en python
 # Requisitos
 🐍 Python 3.9 o superior (Intentando pasar a .exe)
 
+⚠️💿 Solo se puede usar si la letra del disco en la que lo estes ejecutando es C:
+
 
 # Descargar
 Descargar ultima version:
