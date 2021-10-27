@@ -1,13 +1,17 @@
 # "time" para el tiempo
 import time
-filePath = __file__
+
+# "re" para conmprobar las letras especiales
+import re
+
+import os
+filePath = os.path.dirname(os.path.realpath(__file__))
 ruta1 = filePath.replace("\\","/")
 ruta = ruta1.strip("ProyectoBanco.py")
 
 # "datetime para la fecha"
 from datetime import datetime
 from datetime import date
-
 
 # definir menús
 menuPrincipal = """
@@ -46,7 +50,7 @@ def inicio():
                 print(menuIniciarSesion)
                 preguntarUsuario = input("Escribe tu nombre de usuario: ")
                 try:
-                    NombreUsuario = open("c"+ruta+"/Datos/Usuarios/usuario_{}.txt".format(preguntarUsuario),"r")
+                    NombreUsuario = open(ruta+"/Datos/Usuarios/usuario_{}.txt".format(preguntarUsuario),"r")
                     nombreUsuario = NombreUsuario.read()
                     NombreUsuario.close()
 
@@ -58,21 +62,21 @@ def inicio():
 
                 
                 preguntarContraseña = input("Escribe tu contraseña: ")
-                datoContraseña = open("c"+ruta+"Datos/Contraseñas/contraseña_{}.txt".format(nombreUsuario),"r")
+                datoContraseña = open(ruta+"/Datos/Contraseñas/contraseña_{}.txt".format(nombreUsuario),"r")
                 contraseña = datoContraseña.read()
                 datoContraseña.close()
 
                 if preguntarContraseña == contraseña:
-                    abrirDineroLeer = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
+                    abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
                     dinero = int(abrirDineroLeer.read())
                     abrirDineroLeer.close()
                     def tuCuenta():
-                        abrirDineroLeer = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
+                        abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
                         dinero = int(abrirDineroLeer.read())
                         abrirDineroLeer.close()
  
                         def historial(accion):
-                            historialAbrir = open("c"+ruta+"Datos/Historial/historial_{}.txt".format(nombreUsuario),"a")
+                            historialAbrir = open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario),"a")
                             now = datetime.now()
                             hora = str(now.hour)
                             minuto = str(now.minute)
@@ -80,15 +84,15 @@ def inicio():
                             historialAbrir.write("|"+fecha+" "+accion+"\n")
                             historialAbrir.close()
 
-                            historialAbrir = open("c"+ruta+"Datos/Historial/historial_{}.txt".format(nombreUsuario),"r+")
+                            historialAbrir = open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario),"r")
                             lineas = historialAbrir.readlines()
 
                             historialAbrir.close()
                             numeroLineas = len(lineas)
                             if numeroLineas > 30:
-                                with open("c"+ruta+"Datos/Historial/historial_{}.txt".format(nombreUsuario), 'r') as fin:
+                                with open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario), 'r') as fin:
                                     data = fin.read().splitlines(True)
-                                with open("c"+ruta+"Datos/Historial/historial_{}.txt".format(nombreUsuario), 'w') as fout:
+                                with open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario), 'w') as fout:
                                     fout.writelines(data[1:])
                             else:
                                 pass
@@ -111,14 +115,14 @@ def inicio():
                         if opcionesCuenta == "1":
 
                             def ingresarDinero(dineroIngresar):
-                                abrirDineroLeer = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
+                                abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
                                 dinero = int(abrirDineroLeer.read())
                                 abrirDineroLeer.close()
                                 dinero = dinero + dineroIngresar
                                 print("{} € ingresados correctamente".format(dineroIngresar))
                                 print("Redirigiendo...Espera 4 segundos")
                                 historial("Ingresados {} €".format(dineroIngresar))
-                                abrirDineroEscribir = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
+                                abrirDineroEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
                                 time.sleep(4)
                                 abrirDineroEscribir.write(str(dinero))
                                 abrirDineroEscribir.close()
@@ -153,7 +157,7 @@ def inicio():
                                         dinero = dinero + int(preguntarDineroIngresar)
                                         print("{} € ingresados correctamente".format(preguntarDineroIngresar))
                                         print("Redirigiendo...Espera 4 segundos")
-                                        abrirDineroEscribir = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
+                                        abrirDineroEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
                                         abrirDineroEscribir.write(str(dinero))
                                         historial("Ingresados {} €".format(preguntarDineroIngresar))
                                         abrirDineroEscribir.close()
@@ -174,7 +178,7 @@ def inicio():
 
                             # comprobadorDinero comprueba si hay suficiente dinero para sacar y repite todo
                             def comprobadorDinero(dineroComprobar):
-                                abrirDineroLeer = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
+                                abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
                                 dinero = int(abrirDineroLeer.read())
                                 abrirDineroLeer.close()
                                 if dinero < dineroComprobar:
@@ -188,7 +192,7 @@ def inicio():
                                     print("{} € retirados correctamente".format(dineroComprobar))
                                     print("Redirigiendo...Espera 4 segundos")
                                     historial("Sacados {} €".format(dineroComprobar))
-                                    abrirDineroSacar = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
+                                    abrirDineroSacar = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
                                     time.sleep(4)
                                     abrirDineroSacar.write(str(dinero))
                                     abrirDineroSacar.close()
@@ -217,12 +221,12 @@ def inicio():
                             elif opcionesSacar == "6":
                                 preguntarDineroSacar = input("Escribe una cantidad de dinero: ")
                                 if preguntarDineroSacar.isnumeric():
-                                    if int(preguntarDineroSacar) > 0:
+                                    if int(preguntarDineroSacar) < dinero:
                                         dinero = dinero - int(preguntarDineroSacar)
                                         print("{} € retirados correctamente".format(preguntarDineroSacar))
                                         print("Redirigiendo...Espera 4 segundos")
                                         historial("Sacados {} €".format(preguntarDineroSacar))
-                                        abrirDineroSacar = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
+                                        abrirDineroSacar = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
                                         abrirDineroSacar.write(str(dinero))
                                         abrirDineroSacar.close()
                                         time.sleep(4)
@@ -237,9 +241,14 @@ def inicio():
                                     print("Espera 4 segundos para reintentar")
                                     time.sleep(4)
                                     tuCuenta()
+                            else:
+                                print("Elige una opcion valida")
+                                print("Espera 4 segundos para reintentar")
+                                time.sleep(4)
+                                tuCuenta()
 
                         elif opcionesCuenta == "3":
-                            historialAbrir = open("c"+ruta+"Datos/Historial/historial_{}.txt".format(nombreUsuario),"r+")
+                            historialAbrir = open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario),"r+")
                             historial = historialAbrir.read()
                             print("----------------------------------------------")
                             print("|                 Historial:                 |")
@@ -255,12 +264,12 @@ def inicio():
                             print("|            Cambiar contraseña              |")
                             print("|                                            |")
                             contraseñaCambiar = input("|Escribe tu contraseña actual: ")
-                            datoContraseña = open("c"+ruta+"Datos/Contraseñas/contraseña_{}.txt".format(nombreUsuario),"r")
+                            datoContraseña = open(ruta+"/Datos/Contraseñas/contraseña_{}.txt".format(nombreUsuario),"r")
                             contraseña = datoContraseña.read()
                             datoContraseña.close()
                             if contraseñaCambiar == contraseña:
                                 preguntarContraseñaCambiar = input("|Escribe tu nueva contraseña: ")
-                                datoContraseña = open("c"+ruta+"Datos/Contraseñas/contraseña_{}.txt".format(nombreUsuario),"w")
+                                datoContraseña = open(ruta+"/Datos/Contraseñas/contraseña_{}.txt".format(nombreUsuario),"w")
                                 datoContraseña.write(preguntarContraseñaCambiar)
                                 datoContraseña.close()
                                 historial("Se cambio la contraseña")
@@ -275,8 +284,8 @@ def inicio():
 
                         elif opcionesCuenta == "5":
                             def transferirDinero(dineroTransferir):
-                                abrirDineroTransferirDar = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
-                                abrirDineroTransferirRecibir = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"r")
+                                abrirDineroTransferirDar = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
+                                abrirDineroTransferirRecibir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"r")
                                 dineroDar = int(abrirDineroTransferirDar.read())
                                 dineroRecibir = int(abrirDineroTransferirRecibir.read())
                                 abrirDineroTransferirDar.close()
@@ -292,11 +301,11 @@ def inicio():
                                     dineroRecibir = dineroRecibir + dineroTransferir
                                     print("{} € transferidos correctamente".format(dineroTransferir))
                                     print("Redirigiendo...Espera 4 segundos")
-                                    abrirDineroTransferirDarEscribir = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
-                                    abrirDineroTransferirRecibirEscribir = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"w")
+                                    abrirDineroTransferirDarEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
+                                    abrirDineroTransferirRecibirEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"w")
 
                                     historial("Transferidos {} € a {}".format(dineroTransferir, preguntarCuentaTransferir))
-                                    historialAbrir = open("c"+ruta+"Datos/Historial/historial_{}.txt".format(preguntarCuentaTransferir),"a")
+                                    historialAbrir = open(ruta+"/Datos/Historial/historial_{}.txt".format(preguntarCuentaTransferir),"a")
                                     accion = "Recibidos {} € de {}".format(dineroTransferir, nombreUsuario)
                                     now = datetime.now()
                                     hora = str(now.hour)
@@ -319,7 +328,7 @@ def inicio():
                             print("|Escribe el nombre de la cuenta a la         |") 
                             preguntarCuentaTransferir = input("|que quieres transferir: ")
                             try:
-                                NombreUsuario = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"r")
+                                NombreUsuario = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"r")
                                 NombreUsuario.close() 
 
                             except FileNotFoundError:
@@ -351,8 +360,8 @@ def inicio():
                             elif opcionesTransferir == "6":
                                 preguntarDineroTransferir = input("|Escribe una cantidad de dinero: ")
                                 if preguntarDineroTransferir.isnumeric():
-                                    abrirDineroTransferirDar = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
-                                    abrirDineroTransferirRecibir = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"r")
+                                    abrirDineroTransferirDar = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
+                                    abrirDineroTransferirRecibir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"r")
                                     dineroDar = int(abrirDineroTransferirDar.read())
                                     dineroRecibir = int(abrirDineroTransferirRecibir.read())
                                     abrirDineroTransferirDar.close()
@@ -362,11 +371,11 @@ def inicio():
                                         dineroRecibir = dineroRecibir + int(preguntarDineroTransferir)
                                         print("{} € transferidos correctamente".format(preguntarDineroTransferir))
                                         print("Redirigiendo...Espera 4 segundos")
-                                        abrirDineroTransferirDarEscribir = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
-                                        abrirDineroTransferirRecibirEscribir = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"w")
+                                        abrirDineroTransferirDarEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
+                                        abrirDineroTransferirRecibirEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"w")
                                         
                                         historial("Transferidos {} € a {}".format(preguntarDineroTransferir, preguntarCuentaTransferir))
-                                        historialAbrir = open("c"+ruta+"Datos/Historial/historial_{}.txt".format(preguntarCuentaTransferir),"a")
+                                        historialAbrir = open(ruta+"/Datos/Historial/historial_{}.txt".format(preguntarCuentaTransferir),"a")
                                         accion = "Recibidos {} € de {}".format(preguntarDineroTransferir, nombreUsuario)
                                         now = datetime.now()
                                         hora = str(now.hour)
@@ -418,34 +427,42 @@ def inicio():
         
                 print(menuCrearUsuario)
                 usuarioCrear = input("| Escribe un nombre de usuario: ")
-                datoNombreUsuario = open("c"+ruta+"Datos/Usuarios/usuario_{}.txt".format(usuarioCrear),"w")
-                datoNombreUsuario.write(usuarioCrear)   
-                datoNombreUsuario.close()
-                dinero = open("c"+ruta+"Datos/Dinero usuarios/dinero_{}.txt".format(usuarioCrear),"w")
-                dinero.write("0")
-                dinero.close()
-                datoContraseña = open("c"+ruta+"Datos/Contraseñas/contraseña_{}.txt".format(usuarioCrear),"w")      
-                contraseñaCrear = input ("| Escribe una contraseña: ")
-                contraseñaVerificar = input ("| Escribe otra vez la contraseña: ")
-                if contraseñaCrear == contraseñaVerificar:
-                        datoContraseña.write(contraseñaCrear)
-                        historialAbrir = open("c"+ruta+"Datos/Historial/historial_{}.txt".format(usuarioCrear),"r+")
-                        print("   Cuenta creada ")
-                        print("----------------------------")
-                        print("Redirigiendo al menu principal...")
-                        print("Espera 4 segundos")
-                        time.sleep(4)
-                        datoContraseña.close()
-                        inicio()
-                else:
-                        print("Las contraseñas no coinciden, intentalo de nuevo.")
-                        print("--------------------------------------------------")
-                        print("Espera 4 segundos.")
-                        time.sleep(4)
-                        datoContraseña.close()
-                        opcion2()
+                comprobarCaracteres = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
+                if (comprobarCaracteres.search(usuarioCrear) == None):
+                    datoNombreUsuario = open(ruta+"/Datos/Usuarios/usuario_{}.txt".format(usuarioCrear),"w")
+                    datoNombreUsuario.write(usuarioCrear)   
+                    datoNombreUsuario.close()
+                    dinero = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(usuarioCrear),"w")
+                    dinero.write("0")
+                    dinero.close()
+                    datoContraseña = open(ruta+"/Datos/Contraseñas/contraseña_{}.txt".format(usuarioCrear),"w")      
+                    contraseñaCrear = input ("| Escribe una contraseña: ")
+                    contraseñaVerificar = input ("| Escribe otra vez la contraseña: ")
+                    if contraseñaCrear == contraseñaVerificar:
+                            datoContraseña.write(contraseñaCrear)
+                            historialAbrir = open(ruta+"/Datos/Historial/historial_{}.txt".format(usuarioCrear),"w")
+                            historialAbrir.close()
+                            print("   Cuenta creada ")
+                            print("----------------------------")
+                            print("Redirigiendo al menu principal...")
+                            print("Espera 4 segundos")
+                            time.sleep(4)
+                            datoContraseña.close()
+                            inicio()
+                    else:
+                            print("Las contraseñas no coinciden, intentalo de nuevo.")
+                            print("--------------------------------------------------")
+                            print("Espera 4 segundos.")
+                            time.sleep(4)
+                            datoContraseña.close()
+                            opcion2()
                
-                
+                else:
+                    print("Tu nombre de usuario no puede tener caracteres especiales")
+                    print("----------------------------------------------------------")
+                    print("Espera 4 segundos para reintentar.")
+                    time.sleep(4)
+                    opcion2()
                 
         
 
