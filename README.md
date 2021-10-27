@@ -6,9 +6,12 @@ Un simulador de cajero automatico de un banco recreado en python
 # Requisitos
 🐍 Python 3.9 o superior (Intentando pasar a .exe)
 
+![GitHub all releases](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 
 
 
 # Descargar
 Descargar ultima version:
-[Proyecto banco](https://github.com/Rasphy2009/Proyecto-Banco/releases/latest) ![GitHub all releases](https://img.shields.io/github/downloads/Rasphy2009/Proyecto-Banco/total?logo=github)
+[Proyecto banco](https://github.com/Rasphy2009/Proyecto-Banco/releases/latest) ![GitHub all releases](https://img.shields.io/github/downloads/Rasphy2009/Proyecto-Banco/total?color=%2358cced&label=Descargas%20totales&logo=python&logoColor=%23FFFF00)
+
+
