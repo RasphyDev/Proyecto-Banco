@@ -14,4 +14,10 @@ Un simulador de cajero automatico de un banco recreado en python
 Descargar ultima version:
 [Proyecto banco](https://github.com/Rasphy2009/Proyecto-Banco/releases/latest) ![GitHub all releases](https://img.shields.io/github/downloads/Rasphy2009/Proyecto-Banco/total?color=%2358cced&label=Descargas%20totales&logo=python&logoColor=%23FFFF00)
 
+# Otras cosas
+Puedes editar los datos en /Datos y experimentar
 
+### Ejemplo
+Si se te olvida la contraseña puedes entrar en /Datos/Contraseñas/contraseña_USUARIO.txt abrirlo
+
+con un editor de texto para cambiarla o leerla
