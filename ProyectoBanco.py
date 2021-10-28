@@ -33,10 +33,12 @@ menuCrearUsuario = """
 """
 menuIniciarSesion = """
 ----------------------------------------------
-|             Iniciar Sesion:                |
+|              Iniciar Sesion:               |
 |                                            |
 |       Escribe los datos necesarios         |
 |       para iniciar sesion:                 |
+|                                            |
+|       Escribe "cancelar" para cancelar     |
 |                                            |
 """
 
@@ -49,6 +51,12 @@ def inicio():
         def opcion1():
                 print(menuIniciarSesion)
                 preguntarUsuario = input("Escribe tu nombre de usuario: ")
+                
+                if preguntarUsuario == "cancelar":
+                    inicio()
+                else:
+                    pass
+
                 try:
                     NombreUsuario = open(ruta+"/Datos/Usuarios/usuario_{}.txt".format(preguntarUsuario),"r")
                     nombreUsuario = NombreUsuario.read()
@@ -428,6 +436,17 @@ def inicio():
                 print(menuCrearUsuario)
                 usuarioCrear = input("| Escribe un nombre de usuario: ")
                 comprobarCaracteres = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
+
+                if os.path.isfile(ruta+"/Datos/Usuarios/usuario_{}.txt".format(usuarioCrear)) == True:
+                    print("|Este usuario ya existe")
+                    print("|Espera 4 segundos para reintentar")
+                    time.sleep(4)
+                    opcion2()
+
+
+                else:
+                    pass
+
                 if (comprobarCaracteres.search(usuarioCrear) == None):
                     datoNombreUsuario = open(ruta+"/Datos/Usuarios/usuario_{}.txt".format(usuarioCrear),"w")
                     datoNombreUsuario.write(usuarioCrear)   
