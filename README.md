@@ -1,5 +1,6 @@
 # Proyecto-Banco
-![logo1](https://user-images.githubusercontent.com/89478484/131533907-7a987d49-837e-4804-8c2f-4d1611db5cee.png)
+![logo3](https://user-images.githubusercontent.com/89478484/145016947-3695d40c-4a51-4fe0-85d5-b6de6b62b678.png)
+
 
 Un simulador de cajero automatico de un banco recreado en python
 
