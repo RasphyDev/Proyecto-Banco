@@ -4,11 +4,12 @@
 
 Un simulador de cajero automatico de un banco recreado en python
 
-# Requisitos
+# Requisitos (.py solo)
 🐍 Python 3.9 o superior (Intentando pasar a .exe)
 
 ### ⚠️Atencion⚠️
 En la version 3.0 (.py) necesitas tener instalado PySide6
+
 #### Instalacion
 - Para instalar PySide6 tienes que instalar pip (Un gestor de paquetes): Descarga get-pip.py [aqui](https://bootstrap.pypa.io/get-pip.py) (tambien lo dejo en release), haz clic derecho y en guardar como
 <img src="https://user-images.githubusercontent.com/89478484/144708729-2f2e74cf-8ebc-4895-80b1-c48a23a3414b.png" width="500">
@@ -28,9 +29,7 @@ Descargar ultima version:
 Puedes editar los datos en /Datos y experimentar
 
 ### Ejemplo
-Si se te olvida la contraseña puedes entrar en /Datos/Contraseñas/contraseña_USUARIO.txt abrirlo
-
-con un editor de texto para cambiarla o leerla
+Si se te olvida la contraseña puedes entrar en /Datos/Contraseñas/contraseña_USUARIO.txt abrirlo con un editor de texto para cambiarla o leerla (solo.py)
 
 # Capturas de pantalla
 ##### Version 3.0
