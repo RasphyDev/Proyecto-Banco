@@ -5,7 +5,7 @@
 Un simulador de cajero automatico de un banco recreado en python
 
 # Requisitos (.py solo)
-🐍 Python 3.9 o superior (Intentando pasar a .exe)
+🐍 Python 3.9 o superior
 
 ### ⚠️Atencion⚠️
 En la version 3.0 (.py) necesitas tener instalado PySide6
