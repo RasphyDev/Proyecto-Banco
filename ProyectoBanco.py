@@ -4,7 +4,7 @@ import sys
 # Importar PySide6
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtGui import QCloseEvent
+from PySide6.QtGui import QCloseEvent, QGuiApplication, QIcon, QPixmap
 
 # Os para saber la ruta
 import os
@@ -16,6 +16,9 @@ import re
 from datetime import datetime
 from datetime import date
 
+# Time para el tiempo
+import time
+
 # Saber ruta
 filePath = os.path.dirname(os.path.realpath(__file__))
 ruta = filePath.replace("\\","/")
@@ -24,23 +27,160 @@ ruta = filePath.replace("\\","/")
 loader = QUiLoader()
 app = QtWidgets.QApplication(sys.argv)
 
+# StyleSheet para botones
+styleSheetBoton = """QPushButton{\ntext-align: left;\npadding-left: 11px;\nbackground-color: fondo;\nborder-radius: 5px;\n}\nQPushButton::hover{\nbackground-color: rgb(199, 199, 205);\n}\nQPushButton::pressed{\nbackground-color: rgb(185, 185, 185);\n}"""
+
+def vaciarLineEdits():
+    # Iniciar sesion
+    ventanaIniciarSesion.lineEditUsuario.setText("")
+    ventanaIniciarSesion.lineEditContrasena.setText("")
+    ventanaIniciarSesion.lineEditUsuario2.setText("")
+    ventanaIniciarSesion.lineEditContrasena2.setText("")
+    ventanaIniciarSesion.lineEditContrasenaVerificar.setText("")
+    # Ingresar dinero
+    ventanaPrincipal.lineEdit_2.setText("")
+    # Sacar dinero
+    ventanaPrincipal.lineEdit_3.setText("")
+    # Cambiar contraseña
+    ventanaPrincipal.lineEditContrasenaActual.setText("")
+    ventanaPrincipal.lineEditNuevaContrasena.setText("")
+    ventanaPrincipal.lineEditRepetirContrasena.setText("")
+    # Transferir
+    ventanaPrincipal.lineEdit_6.setText("")
+    ventanaPrincipal.lineEdit_7.setText("")
+    # Cambiar usuario
+    ventanaPrincipal.lineEditNombreUsuario.setText("")
+
+def quitarErrores():
+    # Iniciar sesion
+    ventanaIniciarSesion.labelErrorUsuario2.hide()
+    ventanaIniciarSesion.labelErrorContrasena4.hide()
+    ventanaIniciarSesion.labelErrorUsuario.hide()
+    ventanaIniciarSesion.labelErrorContrasena2.hide()
+    ventanaIniciarSesion.correcto.hide()
+    ventanaIniciarSesion.labelErrorContrasena2_2.hide()
+    ventanaIniciarSesion.labelErrorContrasena.hide()
+    # Ingresar dinero
+    ventanaPrincipal.errorDinero.hide()
+    ventanaPrincipal.errorLetras.hide()
+    # Sacar dinero
+    ventanaPrincipal.errorDinero_2.hide()
+    ventanaPrincipal.errorLetras_2.hide()
+    # Cambiar contraseña
+    ventanaPrincipal.errorContrasena.hide()
+    ventanaPrincipal.errorContrasena4.hide()
+    # Transferir
+    ventanaPrincipal.errorDinero_5.hide()
+    ventanaPrincipal.errorLetras_5.hide()
+    ventanaPrincipal.errorNombre.hide()
+    # Cambiar usuario
+    ventanaPrincipal.labelErrorUsuario.hide()
+
 # Actualiza los valores de dinero de ventanas
 def actualizarDinero():
     abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
     dinero = int(abrirDineroLeer.read())
     abrirDineroLeer.close()
-    ventanaTuCuenta.labelDinero.setText("Dinero: "+str(dinero)+" €")
-    ventanaIngresarDinero.labelDinero.setText("Dinero: "+str(dinero)+" €")
-    ventanaSacarDinero.labelDinero.setText("Dinero: "+str(dinero)+" €")
-    ventanaTransferirDinero2.labelDinero.setText("Dinero: "+str(dinero)+" €")
+    ventanaPrincipal.labelDinero.setText(str(dinero)+" €")
+    ventanaPrincipal.labelDinero_2.setText(str(dinero)+" €")
+    ventanaPrincipal.labelDinero_3.setText(str(dinero)+" €")
+    ventanaPrincipal.labelDinero_4.setText(str(dinero)+" €")
+    ventanaPrincipal.labelDinero_5.setText(str(dinero)+" €")
+
+# Splash screen
+def splashScreen():
+    # Quitar barra de titulo
+    ventanaSplashScreen.setWindowFlag(QtCore.Qt.FramelessWindowHint)
+    ventanaSplashScreen.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+
+    # Logo
+    ventanaSplashScreen.label.setPixmap(QPixmap(ruta+"/UIs/Imgs/logo.png"))
+    ventanaSplashScreen.label_2.setPixmap(QPixmap(ruta+"/UIs/Imgs/fondo.png"))
+    ventanaSplashScreen.label.setScaledContents(True)
+
+    # Abrir ventana
+    ventanaSplashScreen.show()
+
+    # Progreso
+    for porcentaje in range(1, 35):
+        time.sleep(0.003)
+        ventanaSplashScreen.labelCargando.setText("Iniciando componentes...")
+        QGuiApplication.processEvents()
+        if porcentaje == 99:
+            ventanaSplashScreen.close()
+            iniciarSesion()
+            break
+
+    for porcentaje in range(35, 75):
+        time.sleep(0.005)
+        ventanaSplashScreen.labelCargando.setText("Cargando interfaces...")
+        QGuiApplication.processEvents()
+        if porcentaje == 99:
+            ventanaSplashScreen.close()
+            iniciarSesion()
+            break
+
+    for porcentaje in range(75, 100, 2):
+        time.sleep(0.002)
+        ventanaSplashScreen.labelCargando.setText("Iniciando...")
+        QGuiApplication.processEvents()
+        if porcentaje == 99:
+            ventanaSplashScreen.close()
+            iniciarSesion()
+            break
+
+
+# Iniciar sesion y crear cuenta
+def iniciarSesion():
+    # Quitar barra de titulo, maximizar y cambiar tamaño
+    ventanaIniciarSesion.setWindowFlag(QtCore.Qt.WindowMaximizeButtonHint, False)
+    ventanaIniciarSesion.logo.setPixmap(QPixmap(ruta+"/UIs/Imgs/logo4.png"))
+    ventanaIniciarSesion.setFixedSize(ventanaIniciarSesion.width(), ventanaIniciarSesion.height())
+    ventanaIniciarSesion.show()
+    quitarErrores()
+
+# Comprueba si checkBox esta pulsado
+def comprobadorCheckBox1():
+    valor = ventanaIniciarSesion.checkBox_Contrasena.checkState()
+    
+    if str(valor) == "PySide6.QtCore.Qt.CheckState.Checked":
+        ventanaIniciarSesion.lineEditContrasena.setEchoMode(QtWidgets.QLineEdit.Normal)
+    else:
+        ventanaIniciarSesion.lineEditContrasena.setEchoMode(QtWidgets.QLineEdit.Password)
+
+def comprobadorCheckBox2():
+    valor = ventanaIniciarSesion.checkBox_Contrasena2.checkState()
+    
+    if str(valor) == "PySide6.QtCore.Qt.CheckState.Checked":
+        ventanaIniciarSesion.lineEditContrasena2.setEchoMode(QtWidgets.QLineEdit.Normal)
+        ventanaIniciarSesion.lineEditContrasenaVerificar.setEchoMode(QtWidgets.QLineEdit.Normal)
+    else:
+        ventanaIniciarSesion.lineEditContrasena2.setEchoMode(QtWidgets.QLineEdit.Password)
+        ventanaIniciarSesion.lineEditContrasenaVerificar.setEchoMode(QtWidgets.QLineEdit.Password)
+
+# Animacion
+def animacionUnfade(ventana1, ventana2):
+    ventana1.hide()
+    ventana2.show()
+    # Unfade
+    ventanaIniciarSesion.effect = QtWidgets.QGraphicsOpacityEffect()
+    ventana2.setGraphicsEffect(ventanaIniciarSesion.effect)
+
+    ventanaIniciarSesion.animation = QtCore.QPropertyAnimation(ventanaIniciarSesion.effect, b"opacity")
+    ventanaIniciarSesion.animation.setDuration(500)
+    ventanaIniciarSesion.animation.setStartValue(0)
+    ventanaIniciarSesion.animation.setEndValue(1)
+    ventanaIniciarSesion.animation.start()
 
 # Crear una cuenta
-def crearCuenta():
-    usuarioCrear = ventanaCrearCuenta.lineEditUsuario.text()
+def crearCuentaScript():
+    usuarioCrear = ventanaIniciarSesion.lineEditUsuario2.text()
     
     # Comprobar si el usuario ya existe
     if os.path.isfile(ruta+"/Datos/Usuarios/usuario_{}.txt".format(usuarioCrear)) == True:
-        errorUsuario.show()
+        ventanaIniciarSesion.labelErrorUsuario.show()
+        error = 1
+        return error
     else:
         pass
 
@@ -48,11 +188,13 @@ def crearCuenta():
     comprobarCaracteres = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
     if (comprobarCaracteres.search(usuarioCrear) == None):
         datoContraseña = open(ruta+"/Datos/Contraseñas/contraseña_{}.txt".format(usuarioCrear),"w")      
-        contraseñaCrear = ventanaCrearCuenta.lineEditContrasena.text()
-        contraseñaVerificar = ventanaCrearCuenta.lineEditContrasenaVerificar.text()
+        contraseñaCrear = ventanaIniciarSesion.lineEditContrasena2.text()
+        contraseñaVerificar = ventanaIniciarSesion.lineEditContrasenaVerificar.text()
         if contraseñaCrear == "" and contraseñaVerificar == "":
-            errorContraseña3.show()
+            ventanaIniciarSesion.labelErrorContrasena2.show()
             datoContraseña.close()
+            error = 1
+            return error
 
         else:
             if contraseñaCrear == contraseñaVerificar:
@@ -65,21 +207,24 @@ def crearCuenta():
                 dinero.close()
                 historialAbrir = open(ruta+"/Datos/Historial/historial_{}.txt".format(usuarioCrear),"w")
                 historialAbrir.close()
-                ventanaCrearCuenta.close()
                 datoContraseña.close()
-                ventanaCrearCuenta.lineEditUsuario.setText("")
-                ventanaCrearCuenta.lineEditContrasena.setText("")
-                ventanaCrearCuenta.lineEditContrasenaVerificar.setText("")
-                correcto.show()
+                ventanaIniciarSesion.lineEditUsuario2.setText("")
+                ventanaIniciarSesion.lineEditContrasena2.setText("")
+                ventanaIniciarSesion.lineEditContrasenaVerificar.setText("")
+                ventanaIniciarSesion.correcto.show()
             else:
-                errorContraseña.show()
+                ventanaIniciarSesion.labelErrorContrasena.show()
                 datoContraseña.close()
+                error = 1
+                return error
                
     else:
-        errorContraseña2.show()
+        ventanaIniciarSesion.labelErrorContrasena2.show()
+        error = 1
+        return error
 
 # Iniciar sesion
-def iniciarSesion():
+def iniciarSesionScript():
     # Comprobar que el usuario existe
     cuentaCorrecta = False
     preguntarUsuario = ventanaIniciarSesion.lineEditUsuario.text()
@@ -91,7 +236,9 @@ def iniciarSesion():
         NombreUsuario.close()
 
     except FileNotFoundError:
-        errorUsuario2.show()
+        ventanaIniciarSesion.labelErrorUsuario2.show()
+        error = 1
+        return error
 
     # Comprobar contraseña
     if cuentaCorrecta == True:
@@ -101,31 +248,84 @@ def iniciarSesion():
         datoContraseña.close()
 
         if preguntarContraseña == contraseña:
-            ventanaInicio.close()
             ventanaIniciarSesion.close()
             tuCuenta()
 
         else:
-            errorContraseña4.show()
+            ventanaIniciarSesion.labelErrorContrasena4.show()
+            error = 1
+            return error
 
     else:
-        errorUsuario2.show()
+        ventanaIniciarSesion.labelErrorUsuario2.show()
+        error = 1
+        return error
 
-# Ventana de acciones de cuenta
+
+# Ventana principal
+# Funcion animacion barra lateral
+def pulsarBotonExpandir(ventanaPrincipal):
+    menuWidth = ventanaPrincipal.barraLateral.width()
+
+    # Comprobar
+    width = 50
+    if menuWidth == 50:
+        width = 190
+
+    # Empezar animacion
+    ventanaPrincipal.animExp = QtCore.QPropertyAnimation(ventanaPrincipal.barraLateral, b"minimumWidth")
+    ventanaPrincipal.animExp.setDuration(300)
+    ventanaPrincipal.animExp.setStartValue(menuWidth)
+    ventanaPrincipal.animExp.setEndValue(width)
+    ventanaPrincipal.animExp.setEasingCurve(QtCore.QEasingCurve.InOutCirc)
+    ventanaPrincipal.animExp.start()
+
+
+# Animacion fade unfade
+def animacionFadeUnfade(opcion):
+    # Mostrar
+    ventanaPrincipal.stackedWidget.setCurrentWidget(opcion)
+
+    # Unfade
+    ventanaPrincipal.effect = QtWidgets.QGraphicsOpacityEffect()
+    opcion.setGraphicsEffect(ventanaPrincipal.effect)
+    ventanaPrincipal.animTuCuenta = QtCore.QPropertyAnimation(ventanaPrincipal.effect, b"opacity")
+    ventanaPrincipal.animTuCuenta.setDuration(300)
+    ventanaPrincipal.animTuCuenta.setStartValue(0)
+    ventanaPrincipal.animTuCuenta.setEndValue(1)
+    ventanaPrincipal.animTuCuenta.start()
+
+# Comprueba si checkBox esta pulsado en ventanaPrincipal
+def comprobadorCheckBox3():
+    valor = ventanaPrincipal.checkBox_Contrasena.checkState()
+    
+    if str(valor) == "PySide6.QtCore.Qt.CheckState.Checked":
+        ventanaPrincipal.lineEditContrasenaActual.setEchoMode(QtWidgets.QLineEdit.Normal)
+        ventanaPrincipal.lineEditNuevaContrasena.setEchoMode(QtWidgets.QLineEdit.Normal)
+        ventanaPrincipal.lineEditRepetirContrasena.setEchoMode(QtWidgets.QLineEdit.Normal)
+    else:
+        ventanaPrincipal.lineEditContrasenaActual.setEchoMode(QtWidgets.QLineEdit.Password)
+        ventanaPrincipal.lineEditNuevaContrasena.setEchoMode(QtWidgets.QLineEdit.Password)
+        ventanaPrincipal.lineEditRepetirContrasena.setEchoMode(QtWidgets.QLineEdit.Password)
+
+
+# Ventana de acciones de cuenta (ventanaPrincipal)
 def tuCuenta():
     global dinero
     abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
     dinero = int(abrirDineroLeer.read())
     abrirDineroLeer.close()
     actualizarDinero()
-    ventanaTuCuenta.show()
-    
-    
+    ventanaPrincipal.labelBienvenido.setText("Bienvenido, "+nombreUsuario)
+    ventanaPrincipal.show()
+    animacionFadeUnfade(ventanaPrincipal.tuCuenta)
+
+
 # Ingresar dinero
 def ingresarDinero():
-
     actualizarDinero()
-    ventanaIngresarDinero.show()
+    animacionFadeUnfade(ventanaPrincipal.ingresarDinero)
+    quitarErrores()
 
 def ingresarDineroScript(dineroIngresar):
     abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
@@ -137,35 +337,41 @@ def ingresarDineroScript(dineroIngresar):
     abrirDineroEscribir.write(str(dinero))
     abrirDineroEscribir.close()
     actualizarDinero()
-    correcto.show()
+    animacionFadeUnfade(ventanaPrincipal.correcto)
+    vaciarLineEdits()
     
 
 def ingresarDineroCustomScript():
-    preguntarDineroIngresar = ventanaPreguntarDineroIngresar.lineEdit.text()
+    preguntarDineroIngresar = ventanaPrincipal.lineEdit_2.text()
     if preguntarDineroIngresar.isnumeric():
         if int(preguntarDineroIngresar) <= 1000000000:
             abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
             dinero = int(abrirDineroLeer.read())
             abrirDineroLeer.close()
             dinero = dinero + int(preguntarDineroIngresar)  
-            ventanaPreguntarDineroIngresar.lineEdit.setText("")
+            ventanaPrincipal.lineEdit_2.setText("")
             abrirDineroEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
             abrirDineroEscribir.write(str(dinero))
             historial("Ingresados {} €".format(dinero))
             abrirDineroEscribir.close()
             actualizarDinero()
-            ventanaPreguntarDineroIngresar.close()
-            correcto.show()
+            animacionFadeUnfade(ventanaPrincipal.correcto)
+            vaciarLineEdits()
         else:
-            errorDinero.show()
+            ventanaPrincipal.errorDinero.show()
+            error = 1
+            return error
     else:
-        errorLetras.show()
-    
+        ventanaPrincipal.errorLetras.show()
+        error = 1
+        return error
+
 
 # Sacar dinero  
 def sacarDinero():
     actualizarDinero()
-    ventanaSacarDinero.show()
+    animacionFadeUnfade(ventanaPrincipal.sacarDinero)
+    quitarErrores()
 
 # Comprueba si hay dinero suficiente y mas
 def comprobadorDinero(dineroComprobar):
@@ -180,14 +386,18 @@ def comprobadorDinero(dineroComprobar):
         abrirDineroSacar.write(str(dinero))
         abrirDineroSacar.close()
         actualizarDinero()
-        correcto.show()
+        animacionFadeUnfade(ventanaPrincipal.correcto)
+        vaciarLineEdits()
 
     else:
-        errorDinero2.show()
+        animacionFadeUnfade(ventanaPrincipal.error)
+        ventanaPrincipal.titulo.setText("No hay suficiente dinero")
+        ventanaPrincipal.relleno.setText("No hay suficiente dinero. ¿Quieres ingresar mas?")
+        error = 1
+        return error
 
 def comprobadorDineroCustom():
-    ventanaPreguntarDineroSacar.show()
-    preguntarDineroSacar = ventanaPreguntarDineroSacar.lineEdit.text()
+    preguntarDineroSacar = ventanaPrincipal.lineEdit_3.text()
     abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
     dinero = int(abrirDineroLeer.read())
     abrirDineroLeer.close()
@@ -197,28 +407,32 @@ def comprobadorDineroCustom():
         abrirDineroLeer.close()
         if int(preguntarDineroSacar) <= dinero:
             dinero = dinero - int(preguntarDineroSacar)
-            correcto.show()
+            animacionFadeUnfade(ventanaPrincipal.correcto)
             historial("Sacados {} €".format(preguntarDineroSacar))
             abrirDineroSacar = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
             abrirDineroSacar.write(str(dinero))
             abrirDineroSacar.close()
             actualizarDinero()
-            ventanaPreguntarDineroSacar.close()
-            ventanaPreguntarDineroSacar.lineEdit.setText("")
-            correcto.show()
+            ventanaPrincipal.lineEdit_3.setText("")
+            vaciarLineEdits()
         else:
-            errorDinero2.show()
+            ventanaPrincipal.errorDinero_2.show()
+            error = 1
+            return error
     else:
-        errorLetras.show()
-    
+        ventanaPrincipal.errorLetras_2.show()
+        error = 1
+        return error
 
+
+# Historial
 # Ver ventana historial
 def historialVer():
     historialAbrir = open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario),"r+")
     textoHistorial = historialAbrir.read()
-    historialAbrir.close
-    ventanaHistorial.textEdit.setText(textoHistorial)
-    ventanaHistorial.show()
+    historialAbrir.close()
+    ventanaPrincipal.textEdit.setText(textoHistorial)
+    animacionFadeUnfade(ventanaPrincipal.historial)
 
 # Escribe en el archivo del historial
 def historial(accion):
@@ -243,244 +457,431 @@ def historial(accion):
     else:
         pass
 
+
 # Cambiar contraseña
 def cambiarContraseña():
-    contraseñaCambiar = ventanaCambiarContraseña.lineEditContrasenaActual.text()
+    animacionFadeUnfade(ventanaPrincipal.cambiarContrasena)
+    quitarErrores()
+
+def cambiarContraseñaScript():
+    contraseñaActual = ventanaPrincipal.lineEditContrasenaActual.text()
     datoContraseña = open(ruta+"/Datos/Contraseñas/contraseña_{}.txt".format(nombreUsuario),"r")
     contraseña = datoContraseña.read()
     datoContraseña.close()
-    if contraseñaCambiar == contraseña:
-        preguntarContraseñaCambiar = ventanaCambiarContraseña.lineEditContrasenaNueva.text()
-        datoContraseña = open(ruta+"/Datos/Contraseñas/contraseña_{}.txt".format(nombreUsuario),"w")
-        datoContraseña.write(preguntarContraseñaCambiar)
-        datoContraseña.close()
-        historial("Se cambio la contraseña")
-        ventanaCambiarContraseña.close()
-        correcto.show()
-
+    contraseñaVerificar = ventanaPrincipal.lineEditRepetirContrasena.text()
+    contraseñaCambiar = ventanaPrincipal.lineEditNuevaContrasena.text()
+    if contraseñaActual == contraseña:
+        if contraseñaVerificar == contraseñaCambiar:
+            preguntarContraseñaCambiar = ventanaPrincipal.lineEditNuevaContrasena.text()
+            datoContraseña = open(ruta+"/Datos/Contraseñas/contraseña_{}.txt".format(nombreUsuario),"w")
+            datoContraseña.write(preguntarContraseñaCambiar)
+            datoContraseña.close()
+            historial("Se cambio la contraseña")
+            animacionFadeUnfade(ventanaPrincipal.correcto)
+        else:
+            ventanaPrincipal.errorContrasena.show()
+            error = 1
+            return error
     else:
-        errorContraseña4.show()
+        ventanaPrincipal.errorContrasena4.show()
+        error = 1
+        return error
+
 
 # Transferir dinero
-
 def transferirDineroScript(dineroTransferir):
-    abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
-    dinero = int(abrirDineroLeer.read())
-    abrirDineroLeer.close()
-    abrirDineroTransferirDar = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
-    abrirDineroTransferirRecibir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"r")
-    dineroDar = int(abrirDineroTransferirDar.read())
-    dineroRecibir = int(abrirDineroTransferirRecibir.read())
-    abrirDineroTransferirDar.close()
-    abrirDineroTransferirRecibir.close()
-    if dineroTransferir <= dineroDar:
-        dineroDar = dineroDar - dineroTransferir
-        dineroRecibir = dineroRecibir + dineroTransferir
-        abrirDineroTransferirDarEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
-        abrirDineroTransferirRecibirEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"w")
-        historialAbrirTu = open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario),"a")
-        historialAbrirOtro = open(ruta+"/Datos/Historial/historial_{}.txt".format(preguntarCuentaTransferir),"a")
-        now = datetime.now()
-        hora = str(now.hour)
-        minuto = str(now.minute)
-        fecha = str(date.today())+" "+hora+":"+minuto
-        historialAbrirTu.write(fecha+" Has transferido "+str(dineroTransferir)+" € a "+preguntarCuentaTransferir+"\n")
-        historialAbrirOtro.write(fecha+" "+nombreUsuario+" te ha transferido "+str(dineroTransferir)+ "€"+"\n")
-        historialAbrirTu.close()
-        historialAbrirOtro.close()
-
-        historialAbrir = open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario),"r")
-        lineas = historialAbrir.readlines()
-
-        historialAbrir.close()
-        numeroLineas = len(lineas)
-
-        if numeroLineas > 100:
-            with open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario), 'r') as fin:
-                data = fin.read().splitlines(True)
-            with open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario), 'w') as fout:
-                fout.writelines(data[1:])
-        else:
-            pass
-
-        abrirDineroTransferirDarEscribir.write(str(dineroDar))
-        abrirDineroTransferirRecibirEscribir.write(str(dineroRecibir))
-        abrirDineroTransferirDarEscribir.close()
-        abrirDineroTransferirRecibirEscribir.close()
-        actualizarDinero()
-        ventanaPreguntarDineroTransferir.lineEdit.setText("")
-        correcto.show()
-                                    
-    else:
-        errorDinero2.show()
-
-def transferirDineroCustomScript():
-    abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
-    dinero = int(abrirDineroLeer.read())
-    abrirDineroLeer.close()
-    preguntarDineroTransferir = ventanaPreguntarDineroTransferir.lineEdit.text()
-    if preguntarDineroTransferir.isnumeric():
-        abrirDineroTransferirDar = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
-        abrirDineroTransferirRecibir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"r")
-        dineroDar = int(abrirDineroTransferirDar.read())
-        dineroRecibir = int(abrirDineroTransferirRecibir.read())
-        abrirDineroTransferirDar.close()
-        abrirDineroTransferirRecibir.close()
-        if int(preguntarDineroTransferir) <= dineroDar:
-            dineroDar = dineroDar - int(preguntarDineroTransferir)
-            dineroRecibir = dineroRecibir + int(preguntarDineroTransferir)
-            abrirDineroTransferirDarEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
-            abrirDineroTransferirRecibirEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"w")                     
-                
-            historialAbrirTu = open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario),"a")
-            historialAbrirOtro = open(ruta+"/Datos/Historial/historial_{}.txt".format(preguntarCuentaTransferir),"a")
-            now = datetime.now()
-            hora = str(now.hour)
-            minuto = str(now.minute)
-            fecha = str(date.today())+" "+hora+":"+minuto
-            historialAbrirTu.write(fecha+" Has transferido "+str(preguntarDineroTransferir)+" € a "+preguntarCuentaTransferir+"\n")
-            historialAbrirOtro.write(fecha+" "+nombreUsuario+" te ha transferido "+str(preguntarDineroTransferir)+ "€"+"\n")
-            historialAbrirTu.close()
-            historialAbrirOtro.close()
-
-            historialAbrir = open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario),"r")
-            lineas = historialAbrir.readlines()
-
-            historialAbrir.close()
-            numeroLineas = len(lineas)
-
-            if numeroLineas > 100:
-                with open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario), 'r') as fin:
-                    data = fin.read().splitlines(True)
-                with open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario), 'w') as fout:
-                    fout.writelines(data[1:])
-            else:
-                pass
-
-            abrirDineroTransferirDarEscribir.write(str(dineroDar))
-            abrirDineroTransferirRecibirEscribir.write(str(dineroRecibir))
-            abrirDineroTransferirDarEscribir.close()
-            abrirDineroTransferirRecibirEscribir.close()
-            actualizarDinero()
-            ventanaPreguntarDineroTransferir.lineEdit.setText("")
-            correcto.show()
-            ventanaPreguntarDineroTransferir.close()
-
-        else:
-            errorDinero2.show()               
-                                    
-    else:
-        errorLetras.show()
-
-def transferirDinero():
     cuentaCorrecta = False
     global preguntarCuentaTransferir
-    preguntarCuentaTransferir = ventanaTransferirDinero.lineEdit.text()
+    preguntarCuentaTransferir = ventanaPrincipal.lineEdit_7.text()
     try:
         NombreUsuario = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"r")
         cuentaCorrecta = True
         NombreUsuario.close()
 
     except FileNotFoundError:
-        errorUsuario2.show()
+        ventanaPrincipal.errorNombre.setText("No se encuentra esa cuenta")
         cuentaCorrecta = False
 
     if preguntarCuentaTransferir == nombreUsuario:
-        errorTransferir.show()
+        ventanaPrincipal.errorNombre.setText("¿Por que quieres transferirte a ti mismo?")
 
     else:
         if cuentaCorrecta == True:
-            ventanaTransferirDinero.close()
-            ventanaTransferirDinero.lineEdit.setText("")
-            abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
-            dinero = int(abrirDineroLeer.read())
-            abrirDineroLeer.close()
-            ventanaTransferirDinero2.show()
-            ventanaTransferirDinero2.labelUsuario.setText(preguntarCuentaTransferir)
+            ventanaPrincipal.lineEdit_7.setText("")
             historialAbrir2 = open(ruta+"/Datos/Historial/historial_{}.txt".format(preguntarCuentaTransferir),"a")
             historialAbrir2.close()
             actualizarDinero()
-            ventanaTransferirDinero2.show()
+            abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
+            dinero = int(abrirDineroLeer.read())
+            abrirDineroLeer.close()
+            abrirDineroTransferirDar = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
+            abrirDineroTransferirRecibir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"r")
+            dineroDar = int(abrirDineroTransferirDar.read())
+            dineroRecibir = int(abrirDineroTransferirRecibir.read())
+            abrirDineroTransferirDar.close()
+            abrirDineroTransferirRecibir.close()
+            if dineroTransferir <= dineroDar:
+                dineroDar = dineroDar - dineroTransferir
+                dineroRecibir = dineroRecibir + dineroTransferir
+                abrirDineroTransferirDarEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
+                abrirDineroTransferirRecibirEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"w")
+                historialAbrirTu = open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario),"a")
+                historialAbrirOtro = open(ruta+"/Datos/Historial/historial_{}.txt".format(preguntarCuentaTransferir),"a")
+                now = datetime.now()
+                hora = str(now.hour)
+                minuto = str(now.minute)
+                fecha = str(date.today())+" "+hora+":"+minuto
+                historialAbrirTu.write(fecha+" Has transferido "+str(dineroTransferir)+" € a "+preguntarCuentaTransferir+"\n")
+                historialAbrirOtro.write(fecha+" "+nombreUsuario+" te ha transferido "+str(dineroTransferir)+ "€"+"\n")
+                historialAbrirTu.close()
+                historialAbrirOtro.close()
+
+                historialAbrir = open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario),"r")
+                lineas = historialAbrir.readlines()
+
+                historialAbrir.close()
+                numeroLineas = len(lineas)
+
+                if numeroLineas > 100:
+                    with open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario), 'r') as fin:
+                        data = fin.read().splitlines(True)
+                    with open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario), 'w') as fout:
+                        fout.writelines(data[1:])
+                else:
+                    pass
+
+                abrirDineroTransferirDarEscribir.write(str(dineroDar))
+                abrirDineroTransferirRecibirEscribir.write(str(dineroRecibir))
+                abrirDineroTransferirDarEscribir.close()
+                abrirDineroTransferirRecibirEscribir.close()
+                actualizarDinero()
+                ventanaPrincipal.lineEdit_6.setText("")
+                animacionFadeUnfade(ventanaPrincipal.correcto)
+                vaciarLineEdits()
+                                            
+            else:
+                ventanaPrincipal.errorNombre.setText("No hay suficiente dinero :(")
+                error = 1
+                return error
         
-
         else:
-            errorUsuario2.show()
+            ventanaPrincipal.errorNombre.setText("No se encuentra esa cuenta")
+            error = 1
+            return error
 
+def transferirDineroCustomScript():
+    cuentaCorrecta = False
+    global preguntarCuentaTransferir
+    preguntarCuentaTransferir = ventanaPrincipal.lineEdit_7.text()
+    try:
+        NombreUsuario = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"r")
+        cuentaCorrecta = True
+        NombreUsuario.close()
+
+    except FileNotFoundError:
+        ventanaPrincipal.errorNombre.setText("No se encuentra esa cuenta")
+        cuentaCorrecta = False
+
+    if preguntarCuentaTransferir == nombreUsuario:
+        ventanaPrincipal.errorNombre.setText("¿Por que quieres transferirte a ti mismo?")
+
+    else:
+        if cuentaCorrecta == True:
+            ventanaPrincipal.lineEdit_7.setText("")
+            historialAbrir2 = open(ruta+"/Datos/Historial/historial_{}.txt".format(preguntarCuentaTransferir),"a")
+            historialAbrir2.close()
+            actualizarDinero()
+        
+        else:
+            ventanaPrincipal.errorNombre.setText("No se encuentra esa cuenta")
+            error = 1
+            return error
+
+
+        abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
+        dinero = int(abrirDineroLeer.read())
+        abrirDineroLeer.close()
+        preguntarDineroTransferir = ventanaPrincipal.lineEdit_6.text()
+        if preguntarDineroTransferir.isnumeric():
+            abrirDineroTransferirDar = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
+            abrirDineroTransferirRecibir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"r")
+            dineroDar = int(abrirDineroTransferirDar.read())
+            dineroRecibir = int(abrirDineroTransferirRecibir.read())
+            abrirDineroTransferirDar.close()
+            abrirDineroTransferirRecibir.close()
+            if int(preguntarDineroTransferir) <= dineroDar:
+                dineroDar = dineroDar - int(preguntarDineroTransferir)
+                dineroRecibir = dineroRecibir + int(preguntarDineroTransferir)
+                abrirDineroTransferirDarEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
+                abrirDineroTransferirRecibirEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"w")                     
+                    
+                historialAbrirTu = open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario),"a")
+                historialAbrirOtro = open(ruta+"/Datos/Historial/historial_{}.txt".format(preguntarCuentaTransferir),"a")
+                now = datetime.now()
+                hora = str(now.hour)
+                minuto = str(now.minute)
+                fecha = str(date.today())+" "+hora+":"+minuto
+                historialAbrirTu.write(fecha+" Has transferido "+str(preguntarDineroTransferir)+" € a "+preguntarCuentaTransferir+"\n")
+                historialAbrirOtro.write(fecha+" "+nombreUsuario+" te ha transferido "+str(preguntarDineroTransferir)+ "€"+"\n")
+                historialAbrirTu.close()
+                historialAbrirOtro.close()
+
+                historialAbrir = open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario),"r")
+                lineas = historialAbrir.readlines()
+
+                historialAbrir.close()
+                numeroLineas = len(lineas)
+
+                if numeroLineas > 100:
+                    with open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario), 'r') as fin:
+                        data = fin.read().splitlines(True)
+                    with open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario), 'w') as fout:
+                        fout.writelines(data[1:])
+                else:
+                    pass
+
+                abrirDineroTransferirDarEscribir.write(str(dineroDar))
+                abrirDineroTransferirRecibirEscribir.write(str(dineroRecibir))
+                abrirDineroTransferirDarEscribir.close()
+                abrirDineroTransferirRecibirEscribir.close()
+                actualizarDinero()
+                ventanaPrincipal.lineEdit_6.setText("")
+                animacionFadeUnfade(ventanaPrincipal.correcto)
+
+            else:
+                ventanaPrincipal.errorNombre.setText("No se encuentra esa cuenta") 
+                error = 1
+                return error             
+                                    
+        else:
+            ventanaPrincipal.errorNombre.setText("No puedes ingresar letras")    
+            error = 1
+            return error
+
+def transferirDinero():
+    ventanaPrincipal.errorNombre.setText("")
+    quitarErrores()
+    animacionFadeUnfade(ventanaPrincipal.transferir)
     
 # Cerrar sesion
 def cerrarSesion():
-    ventanaIniciarSesion.lineEditUsuario.setText("")
-    ventanaIniciarSesion.lineEditContrasena.setText("")
-    ventanaInicio.show()
-    ventanaTuCuenta.close()
-    
-# Importar todas las ventanas
-ventanaInicio = loader.load(ruta+"/UIs/Inicio.ui", None)
-ventanaIniciarSesion = loader.load(ruta+"/UIs/IniciarSesion.ui", None)
-ventanaCrearCuenta = loader.load(ruta+"/UIs/crearCuenta.ui", None)
-ventanaTuCuenta = loader.load(ruta+"/UIs/tuCuenta.ui", None)
-ventanaIngresarDinero = loader.load(ruta+"/UIs/ingresarDinero.ui", None)
-ventanaSacarDinero = loader.load(ruta+"/UIs/sacarDinero.ui", None)
-errorUsuario = loader.load(ruta+"/UIs/errorUsuario.ui", None)
-errorContraseña = loader.load(ruta+"/UIs/errorContraseña.ui", None)
-errorContraseña2 = loader.load(ruta+"/UIs/errorContraseña2.ui", None)
-errorContraseña3 = loader.load(ruta+"/UIs/errorContraseña3.ui", None)
-errorContraseña4 = loader.load(ruta+"/UIs/errorContraseña4.ui", None)
-errorUsuario2 = loader.load(ruta+"/UIs/errorUsuario2.ui", None)
-correcto = loader.load(ruta+"/UIs/correcto.ui", None)
-ventanaPreguntarDineroIngresar = loader.load(ruta+"/UIs/preguntarDinero.ui", None)
-ventanaPreguntarDineroSacar = loader.load(ruta+"/UIs/preguntarDinero.ui", None)
-ventanaPreguntarDineroTransferir = loader.load(ruta+"/UIs/preguntarDinero.ui", None)
-errorDinero = loader.load(ruta+"/UIs/errorDinero.ui", None)
-errorLetras = loader.load(ruta+"/UIs/errorLetras.ui", None)
-errorDinero2 = loader.load(ruta+"/UIs/errorDinero2.ui", None)
-ventanaHistorial = loader.load(ruta+"/UIs/historial.ui", None)
-ventanaCambiarContraseña = loader.load(ruta+"/UIs/cambiarContraseña.ui", None)
-ventanaTransferirDinero = loader.load(ruta+"/UIs/transferirDinero.ui", None)
-ventanaTransferirDinero2 = loader.load(ruta+"/UIs/transferirDinero2.ui", None)
-errorTransferir = loader.load(ruta+"/UIs/errorTransferir.ui", None)
+    ventanaPrincipal.close()
+    ventanaIniciarSesion.show()
 
-# Abrir ventana inicio
-ventanaInicio.show()
+
+# Eliminar cuenta
+def eliminarCuenta():
+    os.remove(ruta+"/Datos/Usuarios/usuario_{}.txt".format(nombreUsuario))
+    os.remove(ruta+"/Datos/Contraseñas/contraseña_{}.txt".format(nombreUsuario))
+    os.remove(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario))
+    os.remove(ruta+"/Datos/Historial/historial_{}.txt".format(nombreUsuario))
+    ventanaPrincipal.close()
+    ventanaIniciarSesion.show()
+
+# Cambiar nombre usuario
+def cambiarNombreUsuario():
+    nuevoNombre = ventanaPrincipal.lineEditNombreUsuario.text()
+
+    # Usuario
+    # Comprobar si el usuario ya existe
+    if os.path.isfile(ruta+"/Datos/Usuarios/usuario_{}.txt".format(nuevoNombre)) == True:
+        ventanaPrincipal.labelErrorUsuario.show()
+        error = 1
+        return error
+    else:
+        pass
+
+    if nuevoNombre == "":
+        ventanaPrincipal.labelErrorUsuario.setText("Tu nombre no puede estar vacio")
+        error = 1
+        return error
+
+    else:
+        nombreAntiguo = nombreUsuario
+
+        datoNombreUsuario = open(ruta+"/Datos/Usuarios/usuario_{}.txt".format(nuevoNombre),"w")
+        datoNombreUsuario.write(nuevoNombre)   
+        datoNombreUsuario.close()
+
+        # Dinero
+        abrirDineroLeerEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreAntiguo),"r")
+        dinero = int(abrirDineroLeerEscribir.read())
+        abrirDineroLeerEscribir.close()
+        abrirDineroNuevo = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nuevoNombre),"w")
+        abrirDineroNuevo.write(str(dinero))
+        abrirDineroNuevo.close()
+
+        # Historial
+        historialAbrir = open(ruta+"/Datos/Historial/historial_{}.txt".format(nombreAntiguo),"r+")
+        textoHistorial = historialAbrir.read()
+        historialAbrir.close()
+        historialNuevo = open(ruta+"/Datos/Historial/historial_{}.txt".format(nuevoNombre),"w+")
+        historialNuevo.write(textoHistorial)
+        historialNuevo.close()
+
+        # Contraseña
+        datoContraseña = open(ruta+"/Datos/Contraseñas/contraseña_{}.txt".format(nombreAntiguo),"r+")
+        contraseñaActual = datoContraseña.read()
+        datoContraseña.close()
+        contraseñaNueva = open(ruta+"/Datos/Contraseñas/contraseña_{}.txt".format(nuevoNombre),"w+")
+        contraseñaNueva.write(contraseñaActual)
+        contraseñaNueva.close()
+
+        os.remove(ruta+"/Datos/Usuarios/usuario_{}.txt".format(nombreAntiguo))
+        os.remove(ruta+"/Datos/Contraseñas/contraseña_{}.txt".format(nombreAntiguo))
+        os.remove(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreAntiguo))
+        os.remove(ruta+"/Datos/Historial/historial_{}.txt".format(nombreAntiguo))
+        animacionFadeUnfade(ventanaPrincipal.tuCuenta)
+
+        abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nuevoNombre),"r")
+        dinero = int(abrirDineroLeer.read())
+        abrirDineroLeer.close()
+        
+        animacionFadeUnfade(ventanaPrincipal.asegurarCambiarNombre)
+
+
+# Definir ventanas y otros ajustes
+ventanaSplashScreen = loader.load(ruta+"/UIs/splashScreen.ui", None)
+ventanaIniciarSesion = loader.load(ruta+"/UIs/IniciarSesion.ui", None)
+ventanaPrincipal = loader.load(ruta+"/UIs/ventanaPrincipal.ui", None)
+ventanaPrincipal.stackedWidget.setCurrentWidget(ventanaPrincipal.tuCuenta)
+ventanaPrincipal.btnAtras.hide()
+ventanaPrincipal.textEdit.setTextInteractionFlags(QtCore.Qt.NoTextInteraction) 
+
+# Establecer iconos e imagenes
+ventanaPrincipal.btnMinMax.setIcon(QIcon(ruta+"/UIs/Imgs/iconoMinMax.png"))
+ventanaPrincipal.btnTuCuenta.setIcon(QIcon(ruta+"/UIs/Imgs/iconoCasaPulsado.png"))
+ventanaPrincipal.btnConfig.setIcon(QIcon(ruta+"/UIs/Imgs/iconoConfig.png")) 
+ventanaPrincipal.btnAtras.setIcon(QIcon(ruta+"/UIs/Imgs/iconoAtras.png"))
+ventanaPrincipal.btnCerrarSesion.setIcon(QIcon(ruta+"/UIs/Imgs/iconoCerrarSesion.png"))
+ventanaPrincipal.tick.setPixmap(QPixmap(ruta+"/UIs/Imgs/iconoCorrecto.png"))
+ventanaPrincipal.iconoInterrogacion.setPixmap(QPixmap(ruta+"/UIs/Imgs/iconoInterrogacion.png"))
+ventanaPrincipal.iconoInterrogacion_2.setPixmap(QPixmap(ruta+"/UIs/Imgs/iconoInterrogacion.png"))
+ventanaPrincipal.iconoError.setPixmap(QPixmap(ruta+"/UIs/Imgs/iconoError.png"))
+ventanaPrincipal.btnTuCuenta.setStyleSheet(styleSheetBoton.replace("fondo","qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(203, 203, 203, 255), stop:1 rgba(229, 229, 229, 255))"))
 
 # Acciones de botones varios
-ventanaInicio.btnIniciarSesion.clicked.connect(lambda: ventanaIniciarSesion.show())
-ventanaInicio.btnCrearCuenta.clicked.connect(lambda: ventanaCrearCuenta.show())
-ventanaIniciarSesion.Cancelar.clicked.connect(lambda: ventanaIniciarSesion.close())
-ventanaCrearCuenta.Cancelar.clicked.connect(lambda: ventanaCrearCuenta.close())
-ventanaCrearCuenta.Aceptar.clicked.connect(lambda: crearCuenta())
-ventanaIniciarSesion.Aceptar.clicked.connect(lambda: iniciarSesion())
-ventanaCambiarContraseña.pushButtonAceptar.clicked.connect(lambda: cambiarContraseña())
-ventanaCambiarContraseña.pushButtonCancelar.clicked.connect(lambda: ventanaCambiarContraseña.close())
-ventanaTransferirDinero.aceptar.clicked.connect(lambda: transferirDinero())
-ventanaTransferirDinero.cancelar.clicked.connect(lambda: ventanaTransferirDinero.close())
-ventanaTuCuenta.pushButtonIngresar.clicked.connect(lambda: ingresarDinero())
-ventanaTuCuenta.pushButtonSacarDinero.clicked.connect(lambda: sacarDinero())
-ventanaTuCuenta.pushButtonHistorial.clicked.connect(lambda: historialVer())
-ventanaTuCuenta.pushButtonCambiarContrasena.clicked.connect(lambda: ventanaCambiarContraseña.show())
-ventanaTuCuenta.pushButtonTransferir.clicked.connect(lambda: ventanaTransferirDinero.show())
-ventanaTuCuenta.pushButtonCerrarSesion.clicked.connect(lambda: cerrarSesion())
-ventanaIngresarDinero.pushButton10.clicked.connect(lambda: ingresarDineroScript(10))
-ventanaIngresarDinero.pushButton50.clicked.connect(lambda: ingresarDineroScript(50))
-ventanaIngresarDinero.pushButton100.clicked.connect(lambda: ingresarDineroScript(100))
-ventanaIngresarDinero.pushButton500.clicked.connect(lambda: ingresarDineroScript(500))
-ventanaIngresarDinero.pushButton1000.clicked.connect(lambda: ingresarDineroScript(1000))
-ventanaIngresarDinero.pushButtonElegir.clicked.connect(lambda: ventanaPreguntarDineroIngresar.show())
-ventanaPreguntarDineroIngresar.aceptar.clicked.connect(lambda: ingresarDineroCustomScript())
-ventanaSacarDinero.pushButton10.clicked.connect(lambda: comprobadorDinero(10))
-ventanaSacarDinero.pushButton50.clicked.connect(lambda: comprobadorDinero(50))
-ventanaSacarDinero.pushButton100.clicked.connect(lambda: comprobadorDinero(100))
-ventanaSacarDinero.pushButton500.clicked.connect(lambda: comprobadorDinero(500))
-ventanaSacarDinero.pushButton1000.clicked.connect(lambda: comprobadorDinero(1000))
-ventanaSacarDinero.pushButtonElegir.clicked.connect(lambda: ventanaPreguntarDineroSacar.show())
-ventanaPreguntarDineroSacar.aceptar.clicked.connect(lambda: comprobadorDineroCustom())
-ventanaTransferirDinero2.pushButton10.clicked.connect(lambda: transferirDineroScript(10))
-ventanaTransferirDinero2.pushButton50.clicked.connect(lambda: transferirDineroScript(50))
-ventanaTransferirDinero2.pushButton100.clicked.connect(lambda: transferirDineroScript(100))
-ventanaTransferirDinero2.pushButton500.clicked.connect(lambda: transferirDineroScript(500))
-ventanaTransferirDinero2.pushButton1000.clicked.connect(lambda: transferirDineroScript(1000))
-ventanaTransferirDinero2.pushButtonElegir.clicked.connect(lambda: ventanaPreguntarDineroTransferir.show())
-ventanaPreguntarDineroTransferir.aceptar.clicked.connect(lambda: transferirDineroCustomScript())
+# Botones acceder y registrase
+ventanaIniciarSesion.btnAcceder.clicked.connect(lambda: iniciarSesionScript())
+ventanaIniciarSesion.btnRegistrarse.clicked.connect(lambda: crearCuentaScript())
+# Comprueba si checkBox esta seleccionado y cambia echoMode en iniciar sesion
+ventanaIniciarSesion.checkBox_Contrasena.clicked.connect(lambda: comprobadorCheckBox1())
+ventanaIniciarSesion.checkBox_Contrasena2.clicked.connect(lambda: comprobadorCheckBox2())
+# Acciones ventanaIniciarSesion
+# Quitar errores
+ventanaIniciarSesion.lineEditUsuario.textChanged.connect(lambda: quitarErrores())
+ventanaIniciarSesion.lineEditContrasena.textChanged.connect(lambda: quitarErrores())
+ventanaIniciarSesion.lineEditUsuario2.textChanged.connect(lambda: quitarErrores())
+ventanaIniciarSesion.lineEditContrasena2.textChanged.connect(lambda: quitarErrores())
+ventanaIniciarSesion.lineEditContrasenaVerificar.textChanged.connect(lambda: quitarErrores())
+# Oculta algo y muestra algo en iniciar sesion
+ventanaIniciarSesion.btnIniciarSesion.clicked.connect(lambda: animacionUnfade(ventanaIniciarSesion.frameCrearCuenta, ventanaIniciarSesion.frameIniciarSesion))
+ventanaIniciarSesion.btnIniciarSesion.clicked.connect(lambda: quitarErrores())
+ventanaIniciarSesion.btnIniciarSesion.clicked.connect(lambda: vaciarLineEdits())
+ventanaIniciarSesion.btnCrearCuenta.clicked.connect(lambda: animacionUnfade(ventanaIniciarSesion.frameIniciarSesion, ventanaIniciarSesion.frameCrearCuenta))
+ventanaIniciarSesion.btnCrearCuenta.clicked.connect(lambda: quitarErrores())
+ventanaIniciarSesion.btnCrearCuenta.clicked.connect(lambda: vaciarLineEdits())
+# Boton ocultar pulsado
+ventanaPrincipal.btnMinMax.clicked.connect(lambda: pulsarBotonExpandir(ventanaPrincipal))
+# Boton tu cuenta pulsado
+ventanaPrincipal.btnTuCuenta.clicked.connect(lambda: ventanaPrincipal.btnTuCuenta.setIcon(QIcon(ruta+"/UIs/Imgs/iconoCasaPulsado.png")))
+ventanaPrincipal.btnTuCuenta.clicked.connect(lambda: ventanaPrincipal.btnConfig.setIcon(QIcon(ruta+"/UIs/Imgs/iconoConfig.png")))
+ventanaPrincipal.btnTuCuenta.clicked.connect(lambda: ventanaPrincipal.btnTuCuenta.setStyleSheet(styleSheetBoton.replace("fondo","qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(203, 203, 203, 255), stop:1 rgba(229, 229, 229, 255))")))
+ventanaPrincipal.btnTuCuenta.clicked.connect(lambda: ventanaPrincipal.btnConfig.setStyleSheet(styleSheetBoton.replace("fondo","rgb(255, 255, 255)")))
+ventanaPrincipal.btnTuCuenta.clicked.connect(lambda: animacionFadeUnfade(ventanaPrincipal.tuCuenta))
+ventanaPrincipal.btnTuCuenta.clicked.connect(lambda: ventanaPrincipal.btnAtras.hide())
+# Boton configuracion pulsado
+ventanaPrincipal.btnConfig.clicked.connect(lambda: ventanaPrincipal.btnConfig.setIcon(QIcon(ruta+"/UIs/Imgs/iconoConfigPulsado.png")))
+ventanaPrincipal.btnConfig.clicked.connect(lambda: ventanaPrincipal.btnTuCuenta.setIcon(QIcon(ruta+"/UIs/Imgs/iconoCasa.png")))
+ventanaPrincipal.btnConfig.clicked.connect(lambda: ventanaPrincipal.btnConfig.setStyleSheet(styleSheetBoton.replace("fondo","qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(203, 203, 203, 255), stop:1 rgba(229, 229, 229, 255))")))
+ventanaPrincipal.btnConfig.clicked.connect(lambda: ventanaPrincipal.btnTuCuenta.setStyleSheet(styleSheetBoton.replace("fondo","rgb(255, 255, 255)")))
+ventanaPrincipal.btnConfig.clicked.connect(lambda: animacionFadeUnfade(ventanaPrincipal.config))
+ventanaPrincipal.btnConfig.clicked.connect(lambda: ventanaPrincipal.btnAtras.hide())
+# Boton atras pulsado
+ventanaPrincipal.btnAtras.clicked.connect(lambda: animacionFadeUnfade(ventanaPrincipal.tuCuenta))
+ventanaPrincipal.btnAtras.clicked.connect(lambda: ventanaPrincipal.btnAtras.hide())
+# Boton ingresar dinero pulsado
+ventanaPrincipal.pushButtonIngresar.clicked.connect(lambda: ingresarDinero())
+ventanaPrincipal.pushButtonIngresar.clicked.connect(lambda: quitarErrores())
+ventanaPrincipal.pushButtonIngresar.clicked.connect(lambda: ventanaPrincipal.btnAtras.show())
+ventanaPrincipal.pushButtonIngresar.clicked.connect(lambda: quitarErrores())
+ventanaPrincipal.pushButtonIngresar.clicked.connect(lambda: vaciarLineEdits())
+ventanaPrincipal.btnIngresarDinero.clicked.connect(lambda: ingresarDinero())
+ventanaPrincipal.btnIngresarDinero.clicked.connect(lambda: quitarErrores())
+ventanaPrincipal.btnIngresarDinero.clicked.connect(lambda: vaciarLineEdits())
+ventanaPrincipal.btnIngresarDinero.clicked.connect(lambda: ventanaPrincipal.btnAtras.show())
+ventanaPrincipal.lineEdit_2.textChanged.connect(lambda: quitarErrores())
+# Acciones transferir dinero
+ventanaPrincipal.pushButton10_5.clicked.connect(lambda: transferirDineroScript(10))
+ventanaPrincipal.pushButton50_5.clicked.connect(lambda: transferirDineroScript(50))
+ventanaPrincipal.pushButton100_5.clicked.connect(lambda: transferirDineroScript(100))
+ventanaPrincipal.pushButton500_5.clicked.connect(lambda: transferirDineroScript(500))
+ventanaPrincipal.pushButton1000_5.clicked.connect(lambda: transferirDineroScript(1000))
+ventanaPrincipal.pushButton10000_5.clicked.connect(lambda: transferirDineroScript(10000))
+ventanaPrincipal.pushButtonTransferir_3.clicked.connect(lambda: transferirDineroCustomScript())
+ventanaPrincipal.lineEdit_6.textChanged.connect(lambda: quitarErrores())
+ventanaPrincipal.lineEdit_7.textChanged.connect(lambda: quitarErrores())
+# Boton sacar dinero pulsado
+ventanaPrincipal.pushButtonSacarDinero.clicked.connect(lambda: sacarDinero())
+ventanaPrincipal.pushButtonSacarDinero.clicked.connect(lambda: vaciarLineEdits())
+ventanaPrincipal.pushButtonSacarDinero.clicked.connect(lambda: quitarErrores())
+ventanaPrincipal.pushButtonSacarDinero.clicked.connect(lambda: ventanaPrincipal.btnAtras.show())
+# Boton historial pulsado
+ventanaPrincipal.pushButtonHistorial.clicked.connect(lambda: historialVer())
+ventanaPrincipal.pushButtonHistorial.clicked.connect(lambda: ventanaPrincipal.btnAtras.show())
+# Boton cambiar contraseña pulsado
+ventanaPrincipal.pushButtonCambiarContrasena.clicked.connect(lambda: cambiarContraseña())
+ventanaPrincipal.pushButtonCambiarContrasena.clicked.connect(lambda: quitarErrores())
+ventanaPrincipal.pushButtonCambiarContrasena.clicked.connect(lambda: vaciarLineEdits())
+ventanaPrincipal.pushButtonCambiarContrasena.clicked.connect(lambda: ventanaPrincipal.btnAtras.show())
+ventanaPrincipal.btnCambiarContrasena.clicked.connect(lambda: cambiarContraseñaScript())
+ventanaPrincipal.lineEditContrasenaActual.textChanged.connect(lambda: quitarErrores())
+ventanaPrincipal.lineEditNuevaContrasena.textChanged.connect(lambda: quitarErrores())
+ventanaPrincipal.lineEditRepetirContrasena.textChanged.connect(lambda: quitarErrores())
+# Boton transferir pulsado
+ventanaPrincipal.pushButtonTransferir.clicked.connect(lambda: transferirDinero())
+ventanaPrincipal.pushButtonTransferir.clicked.connect(lambda: vaciarLineEdits())
+ventanaPrincipal.pushButtonTransferir.clicked.connect(lambda: ventanaPrincipal.btnAtras.show())
+# Boton cerrar sesion pulsado
+ventanaPrincipal.btnCerrarSesion.clicked.connect(lambda: cerrarSesion())
+ventanaPrincipal.pushButtonCerrarSesion.clicked.connect(lambda: cerrarSesion())
+ventanaPrincipal.btnCerrarSesion_2.clicked.connect(lambda: cerrarSesion())
+
+# Boton cambiar nombre de usuario pulsado
+ventanaPrincipal.pushButtonCambiarUsuario.clicked.connect(lambda: animacionFadeUnfade(ventanaPrincipal.cambiarNombreUsuario))
+ventanaPrincipal.pushButtonCambiarUsuario.clicked.connect(lambda: vaciarLineEdits())
+ventanaPrincipal.pushButtonCambiarUsuario.clicked.connect(lambda: ventanaPrincipal.labelErrorUsuario.hide())
+ventanaPrincipal.pushButtonCambiarUsuario.clicked.connect(lambda: ventanaPrincipal.btnAtras.show())
+ventanaPrincipal.btnCambiarUsuario.clicked.connect(lambda: cambiarNombreUsuario())
+ventanaPrincipal.lineEditNombreUsuario.textChanged.connect(lambda: quitarErrores())
+# Boton eliminar cuenta pulsado
+ventanaPrincipal.pushButtonEliminarCuenta.clicked.connect(lambda: animacionFadeUnfade(ventanaPrincipal.asegurarEliminarCuenta))
+ventanaPrincipal.pushButtonEliminarCuenta.clicked.connect(lambda: ventanaPrincipal.btnAtras.show())
+# CheckBox pulsado
+ventanaPrincipal.checkBox_Contrasena.clicked.connect(lambda: comprobadorCheckBox3())
+# Aceptar pulsado
+ventanaPrincipal.btnAceptar.clicked.connect(lambda: animacionFadeUnfade(ventanaPrincipal.tuCuenta))
+# Boton eliminar cuenta pulsado
+ventanaPrincipal.btnEliminar.clicked.connect(lambda: eliminarCuenta())
+# Acciones dinero ingresar
+ventanaPrincipal.pushButton10.clicked.connect(lambda: ingresarDineroScript(10))
+ventanaPrincipal.pushButton50.clicked.connect(lambda: ingresarDineroScript(50))
+ventanaPrincipal.pushButton100.clicked.connect(lambda: ingresarDineroScript(100))
+ventanaPrincipal.pushButton500.clicked.connect(lambda: ingresarDineroScript(500))
+ventanaPrincipal.pushButton1000.clicked.connect(lambda: ingresarDineroScript(1000))
+ventanaPrincipal.pushButton10000.clicked.connect(lambda: ingresarDineroScript(10000))
+ventanaPrincipal.pushButtonIngresar_2.clicked.connect(lambda: ingresarDineroCustomScript())
+# Acciones sacar dinero
+ventanaPrincipal.pushButton10_2.clicked.connect(lambda: comprobadorDinero(10))
+ventanaPrincipal.pushButton50_2.clicked.connect(lambda: comprobadorDinero(50))
+ventanaPrincipal.pushButton100_2.clicked.connect(lambda: comprobadorDinero(100))
+ventanaPrincipal.pushButton500_2.clicked.connect(lambda: comprobadorDinero(500))
+ventanaPrincipal.pushButton1000_2.clicked.connect(lambda: comprobadorDinero(1000))
+ventanaPrincipal.pushButton10000_2.clicked.connect(lambda: comprobadorDinero(10000))
+ventanaPrincipal.pushButtonSacar.clicked.connect(lambda: comprobadorDineroCustom())
+ventanaPrincipal.lineEdit_3.textChanged.connect(lambda: quitarErrores())
 
 # Ejecutar app
+splashScreen()
+
 app.exec()
