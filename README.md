@@ -32,6 +32,9 @@ Puedes editar los datos en /Datos y experimentar
 Si se te olvida la contraseña puedes entrar en /Datos/Contraseñas/contraseña_USUARIO.txt abrirlo con un editor de texto para cambiarla o leerla (solo.py)
 
 # Capturas de pantalla
+##### Version 4.0
+![preview](https://user-images.githubusercontent.com/89478484/149630845-3b6bde3c-e8ae-4048-8806-462a063bd97f.png)
+
 ##### Version 3.0
 ![Captura de pantalla 2021-12-04 125424](https://user-images.githubusercontent.com/89478484/144708988-229ecc9c-dcd7-4b2c-bf02-667634d06da2.png)
 
