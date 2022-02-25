@@ -1,3 +1,26 @@
+"""                                                                     
+
+ ________  ________  ________      ___    ___ _______   ________ _________  ________          ________  ________  ________   ________  ________     
+|\   __  \|\   __  \|\   __  \    |\  \  /  /|\  ___ \ |\   ____\\___   ___\\   __  \        |\   __  \|\   __  \|\   ___  \|\   ____\|\   __  \    
+\ \  \|\  \ \  \|\  \ \  \|\  \   \ \  \/  / | \   __/|\ \  \___\|___ \  \_\ \  \|\  \       \ \  \|\ /\ \  \|\  \ \  \\ \  \ \  \___|\ \  \|\  \   
+ \ \   ____\ \   _  _\ \  \\\  \   \ \    / / \ \  \_|/_\ \  \       \ \  \ \ \  \\\  \       \ \   __  \ \   __  \ \  \\ \  \ \  \    \ \  \\\  \  
+  \ \  \___|\ \  \\  \\ \  \\\  \   \/  /  /   \ \  \_|\ \ \  \____   \ \  \ \ \  \\\  \       \ \  \|\  \ \  \ \  \ \  \\ \  \ \  \____\ \  \\\  \ 
+   \ \__\    \ \__\\ _\\ \_______\__/  / /      \ \_______\ \_______\  \ \__\ \ \_______\       \ \_______\ \__\ \__\ \__\\ \__\ \_______\ \_______\
+    \|__|     \|__|\|__|\|_______|\___/ /        \|_______|\|_______|   \|__|  \|_______|        \|_______|\|__|\|__|\|__| \|__|\|_______|\|_______|
+                                 \|___|/                                                                                                            
+por Rasphy: https://github.com/Rasphy2009/Proyecto-Banco  
+V 4.1                                                                                                                                          
+                                                                                                                                                    
+""" 
+
+# Para encriptar/ desencriptar
+import base64
+
+def encriptar(variable):
+    global encriptado
+    encriptado = variable.encode("utf-8")
+    return encriptado
+
 # Sys para abir ventanas
 import sys
 
@@ -79,7 +102,7 @@ def quitarErrores():
 # Actualiza los valores de dinero de ventanas
 def actualizarDinero():
     abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
-    dinero = int(abrirDineroLeer.read())
+    dinero = bytes.decode(base64.b64decode(abrirDineroLeer.read()))
     abrirDineroLeer.close()
     ventanaPrincipal.labelDinero.setText(str(dinero)+" €")
     ventanaPrincipal.labelDinero_2.setText(str(dinero)+" €")
@@ -198,12 +221,12 @@ def crearCuentaScript():
 
         else:
             if contraseñaCrear == contraseñaVerificar:
-                datoContraseña.write(contraseñaCrear)
+                datoContraseña.write(bytes.decode(base64.b64encode(encriptar(contraseñaCrear))))
                 datoNombreUsuario = open(ruta+"/Datos/Usuarios/usuario_{}.txt".format(usuarioCrear),"w")
                 datoNombreUsuario.write(usuarioCrear)   
                 datoNombreUsuario.close()
                 dinero = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(usuarioCrear),"w")
-                dinero.write("0")
+                dinero.write(bytes.decode(base64.b64encode(encriptar("0"))))
                 dinero.close()
                 historialAbrir = open(ruta+"/Datos/Historial/historial_{}.txt".format(usuarioCrear),"w")
                 historialAbrir.close()
@@ -244,7 +267,7 @@ def iniciarSesionScript():
     if cuentaCorrecta == True:
         preguntarContraseña = ventanaIniciarSesion.lineEditContrasena.text()
         datoContraseña = open(ruta+"/Datos/Contraseñas/contraseña_{}.txt".format(nombreUsuario),"r")
-        contraseña = datoContraseña.read()
+        contraseña = bytes.decode(base64.b64decode(datoContraseña.read()))
         datoContraseña.close()
 
         if preguntarContraseña == contraseña:
@@ -313,10 +336,11 @@ def comprobadorCheckBox3():
 def tuCuenta():
     global dinero
     abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
-    dinero = int(abrirDineroLeer.read())
+    dinero = bytes.decode(base64.b64decode(abrirDineroLeer.read()))
+    int(dinero)
     abrirDineroLeer.close()
     actualizarDinero()
-    ventanaPrincipal.labelBienvenido.setText("Bienvenido, "+nombreUsuario)
+    ventanaPrincipal.labelUsuario.setText("<strong>"+nombreUsuario+"</strong>")
     ventanaPrincipal.show()
     animacionFadeUnfade(ventanaPrincipal.tuCuenta)
 
@@ -329,12 +353,12 @@ def ingresarDinero():
 
 def ingresarDineroScript(dineroIngresar):
     abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
-    dinero = int(abrirDineroLeer.read())
+    dinero = int(bytes.decode(base64.b64decode(abrirDineroLeer.read())))
     abrirDineroLeer.close()
     dinero = dinero + int(dineroIngresar)
     historial("Ingresados {} €".format(dineroIngresar))
     abrirDineroEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
-    abrirDineroEscribir.write(str(dinero))
+    abrirDineroEscribir.write(bytes.decode(base64.b64encode(encriptar(str(dinero)))))
     abrirDineroEscribir.close()
     actualizarDinero()
     animacionFadeUnfade(ventanaPrincipal.correcto)
@@ -346,12 +370,12 @@ def ingresarDineroCustomScript():
     if preguntarDineroIngresar.isnumeric():
         if int(preguntarDineroIngresar) <= 1000000000:
             abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
-            dinero = int(abrirDineroLeer.read())
+            dinero = int(bytes.decode(base64.b64decode(abrirDineroLeer.read())))
             abrirDineroLeer.close()
             dinero = dinero + int(preguntarDineroIngresar)  
             ventanaPrincipal.lineEdit_2.setText("")
             abrirDineroEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
-            abrirDineroEscribir.write(str(dinero))
+            abrirDineroEscribir.write(bytes.decode(base64.b64encode(encriptar(str(dinero)))))
             historial("Ingresados {} €".format(dinero))
             abrirDineroEscribir.close()
             actualizarDinero()
@@ -376,14 +400,14 @@ def sacarDinero():
 # Comprueba si hay dinero suficiente y mas
 def comprobadorDinero(dineroComprobar):
     abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
-    dinero = int(abrirDineroLeer.read())
+    dinero = int(bytes.decode(base64.b64decode(abrirDineroLeer.read())))
     abrirDineroLeer.close()
 
     if dineroComprobar <= dinero:
         dinero = dinero - int(dineroComprobar)
         historial("Sacados {} €".format(dineroComprobar))
         abrirDineroSacar = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
-        abrirDineroSacar.write(str(dinero))
+        abrirDineroSacar.write(bytes.decode(base64.b64encode(encriptar(str(dinero)))))
         abrirDineroSacar.close()
         actualizarDinero()
         animacionFadeUnfade(ventanaPrincipal.correcto)
@@ -399,18 +423,18 @@ def comprobadorDinero(dineroComprobar):
 def comprobadorDineroCustom():
     preguntarDineroSacar = ventanaPrincipal.lineEdit_3.text()
     abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
-    dinero = int(abrirDineroLeer.read())
+    dinero = int(bytes.decode(base64.b64decode(abrirDineroLeer.read())))
     abrirDineroLeer.close()
     if preguntarDineroSacar.isnumeric():
         abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
-        dinero = int(abrirDineroLeer.read())
+        dinero = int(bytes.decode(base64.b64decode(abrirDineroLeer.read())))
         abrirDineroLeer.close()
         if int(preguntarDineroSacar) <= dinero:
             dinero = dinero - int(preguntarDineroSacar)
             animacionFadeUnfade(ventanaPrincipal.correcto)
             historial("Sacados {} €".format(preguntarDineroSacar))
             abrirDineroSacar = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"w")
-            abrirDineroSacar.write(str(dinero))
+            abrirDineroSacar.write(bytes.decode(base64.b64encode(encriptar(str(dinero)))))
             abrirDineroSacar.close()
             actualizarDinero()
             ventanaPrincipal.lineEdit_3.setText("")
@@ -466,7 +490,7 @@ def cambiarContraseña():
 def cambiarContraseñaScript():
     contraseñaActual = ventanaPrincipal.lineEditContrasenaActual.text()
     datoContraseña = open(ruta+"/Datos/Contraseñas/contraseña_{}.txt".format(nombreUsuario),"r")
-    contraseña = datoContraseña.read()
+    contraseña = bytes.decode(base64.b64decode(datoContraseña.read()))
     datoContraseña.close()
     contraseñaVerificar = ventanaPrincipal.lineEditRepetirContrasena.text()
     contraseñaCambiar = ventanaPrincipal.lineEditNuevaContrasena.text()
@@ -474,7 +498,7 @@ def cambiarContraseñaScript():
         if contraseñaVerificar == contraseñaCambiar:
             preguntarContraseñaCambiar = ventanaPrincipal.lineEditNuevaContrasena.text()
             datoContraseña = open(ruta+"/Datos/Contraseñas/contraseña_{}.txt".format(nombreUsuario),"w")
-            datoContraseña.write(preguntarContraseñaCambiar)
+            datoContraseña.write(bytes.decode(base64.b64encode(encriptar(preguntarContraseñaCambiar))))
             datoContraseña.close()
             historial("Se cambio la contraseña")
             animacionFadeUnfade(ventanaPrincipal.correcto)
@@ -512,12 +536,12 @@ def transferirDineroScript(dineroTransferir):
             historialAbrir2.close()
             actualizarDinero()
             abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
-            dinero = int(abrirDineroLeer.read())
+            dinero = int(bytes.decode(base64.b64decode(abrirDineroLeer.read())))
             abrirDineroLeer.close()
             abrirDineroTransferirDar = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
             abrirDineroTransferirRecibir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"r")
-            dineroDar = int(abrirDineroTransferirDar.read())
-            dineroRecibir = int(abrirDineroTransferirRecibir.read())
+            dineroDar = int(bytes.decode(base64.b64decode(abrirDineroTransferirDar.read())))
+            dineroRecibir = int(bytes.decode(base64.b64decode(abrirDineroTransferirRecibir.read())))
             abrirDineroTransferirDar.close()
             abrirDineroTransferirRecibir.close()
             if dineroTransferir <= dineroDar:
@@ -550,8 +574,8 @@ def transferirDineroScript(dineroTransferir):
                 else:
                     pass
 
-                abrirDineroTransferirDarEscribir.write(str(dineroDar))
-                abrirDineroTransferirRecibirEscribir.write(str(dineroRecibir))
+                abrirDineroTransferirDarEscribir.write(bytes.decode(base64.b64encode(encriptar(str(dineroDar)))))
+                abrirDineroTransferirRecibirEscribir.write(bytes.decode(base64.b64encode(encriptar(str(dineroRecibir)))))
                 abrirDineroTransferirDarEscribir.close()
                 abrirDineroTransferirRecibirEscribir.close()
                 actualizarDinero()
@@ -561,11 +585,13 @@ def transferirDineroScript(dineroTransferir):
                                             
             else:
                 ventanaPrincipal.errorNombre.setText("No hay suficiente dinero :(")
+                ventanaPrincipal.errorNombre.show()
                 error = 1
                 return error
         
         else:
             ventanaPrincipal.errorNombre.setText("No se encuentra esa cuenta")
+            ventanaPrincipal.errorNombre.show()
             error = 1
             return error
 
@@ -599,14 +625,14 @@ def transferirDineroCustomScript():
 
 
         abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
-        dinero = int(abrirDineroLeer.read())
+        dinero = int(bytes.decode(base64.b64decode(abrirDineroLeer.read())))
         abrirDineroLeer.close()
         preguntarDineroTransferir = ventanaPrincipal.lineEdit_6.text()
         if preguntarDineroTransferir.isnumeric():
             abrirDineroTransferirDar = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreUsuario),"r")
             abrirDineroTransferirRecibir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(preguntarCuentaTransferir),"r")
-            dineroDar = int(abrirDineroTransferirDar.read())
-            dineroRecibir = int(abrirDineroTransferirRecibir.read())
+            dineroDar = int(bytes.decode(base64.b64decode(abrirDineroTransferirDar.read())))
+            dineroRecibir = int(bytes.decode(base64.b64decode(abrirDineroTransferirRecibir.read())))
             abrirDineroTransferirDar.close()
             abrirDineroTransferirRecibir.close()
             if int(preguntarDineroTransferir) <= dineroDar:
@@ -640,8 +666,8 @@ def transferirDineroCustomScript():
                 else:
                     pass
 
-                abrirDineroTransferirDarEscribir.write(str(dineroDar))
-                abrirDineroTransferirRecibirEscribir.write(str(dineroRecibir))
+                abrirDineroTransferirDarEscribir.write(bytes.decode(base64.b64encode(encriptar(str(dineroDar)))))
+                abrirDineroTransferirRecibirEscribir.write(bytes.decode(base64.b64encode(encriptar(str(dineroRecibir)))))
                 abrirDineroTransferirDarEscribir.close()
                 abrirDineroTransferirRecibirEscribir.close()
                 actualizarDinero()
@@ -650,11 +676,13 @@ def transferirDineroCustomScript():
 
             else:
                 ventanaPrincipal.errorNombre.setText("No se encuentra esa cuenta") 
+                ventanaPrincipal.errorNombre.show()
                 error = 1
                 return error             
                                     
         else:
-            ventanaPrincipal.errorNombre.setText("No puedes ingresar letras")    
+            ventanaPrincipal.errorNombre.setText("No puedes ingresar letras")
+            ventanaPrincipal.errorNombre.show()
             error = 1
             return error
 
@@ -705,10 +733,10 @@ def cambiarNombreUsuario():
 
         # Dinero
         abrirDineroLeerEscribir = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nombreAntiguo),"r")
-        dinero = int(abrirDineroLeerEscribir.read())
+        dinero = int(bytes.decode(base64.b64decode(abrirDineroLeerEscribir.read())))
         abrirDineroLeerEscribir.close()
         abrirDineroNuevo = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nuevoNombre),"w")
-        abrirDineroNuevo.write(str(dinero))
+        abrirDineroNuevo.write(bytes.decode(base64.b64encode(encriptar(str(dinero)))))
         abrirDineroNuevo.close()
 
         # Historial
@@ -721,10 +749,10 @@ def cambiarNombreUsuario():
 
         # Contraseña
         datoContraseña = open(ruta+"/Datos/Contraseñas/contraseña_{}.txt".format(nombreAntiguo),"r+")
-        contraseñaActual = datoContraseña.read()
+        contraseñaActual = bytes.decode(base64.b64decode(datoContraseña.read()))
         datoContraseña.close()
         contraseñaNueva = open(ruta+"/Datos/Contraseñas/contraseña_{}.txt".format(nuevoNombre),"w+")
-        contraseñaNueva.write(contraseñaActual)
+        contraseñaNueva.write(bytes.decode(base64.b64encode(encriptar(contraseñaActual))))
         contraseñaNueva.close()
 
         os.remove(ruta+"/Datos/Usuarios/usuario_{}.txt".format(nombreAntiguo))
@@ -734,7 +762,7 @@ def cambiarNombreUsuario():
         animacionFadeUnfade(ventanaPrincipal.tuCuenta)
 
         abrirDineroLeer = open(ruta+"/Datos/Dinero usuarios/dinero_{}.txt".format(nuevoNombre),"r")
-        dinero = int(abrirDineroLeer.read())
+        dinero = int(bytes.decode(base64.b64decode(abrirDineroLeer.read())))
         abrirDineroLeer.close()
         
         animacionFadeUnfade(ventanaPrincipal.asegurarCambiarNombre)
@@ -747,6 +775,7 @@ ventanaPrincipal = loader.load(ruta+"/UIs/ventanaPrincipal.ui", None)
 ventanaPrincipal.stackedWidget.setCurrentWidget(ventanaPrincipal.tuCuenta)
 ventanaPrincipal.btnAtras.hide()
 ventanaPrincipal.textEdit.setTextInteractionFlags(QtCore.Qt.NoTextInteraction) 
+ventanaIniciarSesion.setWindowIcon(QIcon(ruta+"/UIs/Imgs/icono.ico"))
 
 # Establecer iconos e imagenes
 ventanaPrincipal.btnMinMax.setIcon(QIcon(ruta+"/UIs/Imgs/iconoMinMax.png"))
