@@ -9,7 +9,7 @@
     \|__|     \|__|\|__|\|_______|\___/ /        \|_______|\|_______|   \|__|  \|_______|        \|_______|\|__|\|__|\|__| \|__|\|_______|\|_______|
                                  \|___|/                                                                                                            
 por Rasphy: https://github.com/Rasphy2009/Proyecto-Banco  
-V 4.1                                                                                                                                          
+V 4.2                                                                                                                                        
                                                                                                                                                     
 """ 
 
@@ -330,6 +330,16 @@ def comprobadorCheckBox3():
         ventanaPrincipal.lineEditContrasenaActual.setEchoMode(QtWidgets.QLineEdit.Password)
         ventanaPrincipal.lineEditNuevaContrasena.setEchoMode(QtWidgets.QLineEdit.Password)
         ventanaPrincipal.lineEditRepetirContrasena.setEchoMode(QtWidgets.QLineEdit.Password)
+
+
+# Comprueba si checkBox esta pulsado en modo oscuro
+def comprobadorCheckBox4():
+    valor = ventanaPrincipal.checkBox_ModoOscuro.checkState()
+    
+    if str(valor) == "PySide6.QtCore.Qt.CheckState.Checked":
+        modoOscuro()
+    else:
+        modoClaro()
 
 
 # Ventana de acciones de cuenta (ventanaPrincipal)
@@ -768,6 +778,198 @@ def cambiarNombreUsuario():
         animacionFadeUnfade(ventanaPrincipal.asegurarCambiarNombre)
 
 
+def modoOscuro():
+    # Cambiar configuracion
+    abrirModoOscuro = open(ruta+"/Datos/modoOscuro.txt","w")
+    abrirModoOscuro.write("1")
+    abrirModoOscuro.close()
+    # Ventana iniciar sesion
+    ventanaIniciarSesion.frame.setStyleSheet("QFrame{\nbackground-color: rgb(36, 36, 36);\n}")
+    ventanaIniciarSesion.logo.setPixmap(QPixmap(ruta+"/UIs/Imgs/logo.png"))
+    ventanaIniciarSesion.logo.setMaximumSize(5000000, 150)
+    ventanaIniciarSesion.logo.setGeometry(20, 30, 361, 150)
+    datosStyleSheet = open(ruta+"/UIs/styleSheets/styleSheet_CheckBox.txt", "r")
+    styleSheet = datosStyleSheet.read()
+    datosStyleSheet.close()
+    ventanaIniciarSesion.checkBox_Contrasena.setStyleSheet(styleSheet)
+    ventanaIniciarSesion.checkBox_Contrasena2.setStyleSheet(styleSheet)
+    ventanaPrincipal.checkBox_Contrasena.setStyleSheet(styleSheet)# <---- Ventana principal
+    ventanaPrincipal.checkBox_ModoOscuro.setStyleSheet(styleSheet)# <---- Ventana principal
+    # Ventana principal
+    # Historial
+    datosStyleSheet = open(ruta+"/UIs/styleSheets/styleSheet_Historial.txt", "r")
+    styleSheet = datosStyleSheet.read()
+    datosStyleSheet.close()
+    ventanaPrincipal.textEdit.setStyleSheet(styleSheet)
+    # Botones laterales
+    datosStyleSheet = open(ruta+"/UIs/styleSheets/styleSheet_BotonesLaterales.txt", "r")
+    styleSheet = datosStyleSheet.read()
+    datosStyleSheet.close()
+    ventanaPrincipal.btnMinMax.setStyleSheet(styleSheet)
+    ventanaPrincipal.btnTuCuenta.setStyleSheet(styleSheet)
+    ventanaPrincipal.btnCerrarSesion.setStyleSheet(styleSheet)
+    ventanaPrincipal.btnConfig.setStyleSheet(styleSheet)
+    # Frames informativos
+    datosStyleSheet = open(ruta+"/UIs/styleSheets/styleSheet_Frames.txt", "r")
+    styleSheet = datosStyleSheet.read()
+    datosStyleSheet.close()
+    ventanaPrincipal.frameDinero.setStyleSheet(styleSheet)
+    ventanaPrincipal.frameDinero_2.setStyleSheet(styleSheet)
+    ventanaPrincipal.frameDinero_3.setStyleSheet(styleSheet)
+    ventanaPrincipal.frameDinero_4.setStyleSheet(styleSheet)
+    ventanaPrincipal.frameDinero_5.setStyleSheet(styleSheet)
+    ventanaPrincipal.frameElegir.setStyleSheet(styleSheet)
+    ventanaPrincipal.frameElegir_2.setStyleSheet(styleSheet)
+    ventanaPrincipal.frameElegir_5.setStyleSheet(styleSheet)
+    ventanaPrincipal.frameCuenta.setStyleSheet(styleSheet)
+    datosStyleSheet = open(ruta+"/UIs/styleSheets/styleSheet_LabelsDinero.txt", "r")
+    styleSheet = datosStyleSheet.read()
+    datosStyleSheet.close()
+    ventanaPrincipal.labelTuDinero.setStyleSheet(styleSheet)
+    ventanaPrincipal.labelTuDinero_2.setStyleSheet(styleSheet)
+    ventanaPrincipal.labelTuDinero_3.setStyleSheet(styleSheet)
+    ventanaPrincipal.labelTuDinero_4.setStyleSheet(styleSheet)
+    ventanaPrincipal.labelTuDinero_5.setStyleSheet(styleSheet)
+    ventanaPrincipal.labelElegir.setStyleSheet(styleSheet)
+    ventanaPrincipal.labelElegir_2.setStyleSheet(styleSheet)
+    ventanaPrincipal.labelElegir_5.setStyleSheet(styleSheet)
+    ventanaPrincipal.labelElegir_6.setStyleSheet(styleSheet)
+    # Frame arriba y lado
+    ventanaPrincipal.barraArriba.setStyleSheet("QFrame{\nbackground-color: rgb(65, 65, 65);\n}")
+    ventanaPrincipal.barraLateral.setStyleSheet("QFrame{\nbackground-color: rgb(65, 65, 65);\n}")
+    # Contenido
+    ventanaPrincipal.contenido.setStyleSheet("QFrame{\nbackground-color: rgb(36, 36, 36);\n}")
+    # Configuracion
+    ventanaPrincipal.scrollAreaWidgetContents_2.setStyleSheet("background-color: rgb(36, 36, 36);\nborder: none;")
+    # Labels
+    ventanaPrincipal.labelTuCuenta.setStyleSheet("QLabel{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.label_3.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.label_4.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.label_8.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.label_10.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.label_12.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.label_13.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.label_19.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.label_17.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.label_16.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.label_18.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.label_15.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.label_22.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.label_24.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.labelBienvenido.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.labelUsuario.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.labelVersion.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.labelCorrecto.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.relleno.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.titulo.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.texto.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.label_20.setStyleSheet("QFrame{\ncolor: rgb(255, 255, 255);\n}")
+    ventanaPrincipal.labelDinero.setStyleSheet("QLabel{\ncolor: rgb(255, 255, 255);\nborder: none;\npadding: 1px;\n}")
+    ventanaPrincipal.labelDinero_2.setStyleSheet("QLabel{\ncolor: rgb(255, 255, 255);\nborder: none;\npadding: 1px;\n}")
+    ventanaPrincipal.labelDinero_3.setStyleSheet("QLabel{\ncolor: rgb(255, 255, 255);\nborder: none;\npadding: 1px;\n}")
+    ventanaPrincipal.labelDinero_4.setStyleSheet("QLabel{\ncolor: rgb(255, 255, 255);\nborder: none;\npadding: 1px;\n}")
+    ventanaPrincipal.labelDinero_5.setStyleSheet("QLabel{\ncolor: rgb(255, 255, 255);\nborder: none;\npadding: 1px;\n}")
+    ventanaPrincipal.label_31.setStyleSheet("QLabel{\ncolor: rgb(255, 255, 255);\nborder: none;\npadding: 1px;\n}")
+    ventanaPrincipal.label_7.setStyleSheet("QLabel{\ncolor: rgb(255, 255, 255);\nborder: none;\npadding: 1px;\n}")
+    ventanaPrincipal.label_6.setStyleSheet("QLabel{\ncolor: rgb(255, 255, 255);\nborder: none;\npadding: 1px;\n}")
+
+
+def modoClaro():
+    # Cambiar configuracion
+    abrirModoOscuro = open(ruta+"/Datos/modoOscuro.txt","w")
+    abrirModoOscuro.write("0")
+    abrirModoOscuro.close()
+    # Ventana iniciar sesion
+    ventanaIniciarSesion.frame.setStyleSheet("QFrame{\nbackground-color: rgb(255, 255, 255);\n}")
+    ventanaIniciarSesion.logo.setPixmap(QPixmap(ruta+"/UIs/Imgs/logo4.png"))
+    ventanaIniciarSesion.logo.setMaximumSize(5000000, 5000000)
+    ventanaIniciarSesion.logo.setGeometry(20, 30, 361, 191)
+    datosStyleSheet = open(ruta+"/UIs/styleSheets/styleSheet_CheckBox_claro.txt", "r")
+    styleSheet = datosStyleSheet.read()
+    datosStyleSheet.close()
+    ventanaIniciarSesion.checkBox_Contrasena.setStyleSheet(styleSheet)
+    ventanaIniciarSesion.checkBox_Contrasena2.setStyleSheet(styleSheet)
+    ventanaPrincipal.checkBox_Contrasena.setStyleSheet(styleSheet)# <---- Ventana principal
+    ventanaPrincipal.checkBox_ModoOscuro.setStyleSheet(styleSheet)# <---- Ventana principal
+    # Ventana principal
+    # Historial
+    datosStyleSheet = open(ruta+"/UIs/styleSheets/styleSheet_Historial_claro.txt", "r")
+    styleSheet = datosStyleSheet.read()
+    datosStyleSheet.close()
+    ventanaPrincipal.textEdit.setStyleSheet(styleSheet)
+    # Botones laterales
+    datosStyleSheet = open(ruta+"/UIs/styleSheets/styleSheet_BotonesLaterales_claro.txt", "r")
+    styleSheet = datosStyleSheet.read()
+    datosStyleSheet.close()
+    ventanaPrincipal.btnMinMax.setStyleSheet(styleSheet)
+    ventanaPrincipal.btnTuCuenta.setStyleSheet(styleSheet)
+    ventanaPrincipal.btnCerrarSesion.setStyleSheet(styleSheet)
+    ventanaPrincipal.btnConfig.setStyleSheet(styleSheet)
+    # Frames informativos
+    datosStyleSheet = open(ruta+"/UIs/styleSheets/styleSheet_Frames_claro.txt", "r")
+    styleSheet = datosStyleSheet.read()
+    datosStyleSheet.close()
+    ventanaPrincipal.frameDinero.setStyleSheet(styleSheet)
+    ventanaPrincipal.frameDinero_2.setStyleSheet(styleSheet)
+    ventanaPrincipal.frameDinero_3.setStyleSheet(styleSheet)
+    ventanaPrincipal.frameDinero_4.setStyleSheet(styleSheet)
+    ventanaPrincipal.frameDinero_5.setStyleSheet(styleSheet)
+    ventanaPrincipal.frameElegir.setStyleSheet(styleSheet)
+    ventanaPrincipal.frameElegir_2.setStyleSheet(styleSheet)
+    ventanaPrincipal.frameElegir_5.setStyleSheet(styleSheet)
+    ventanaPrincipal.frameCuenta.setStyleSheet(styleSheet)
+    datosStyleSheet = open(ruta+"/UIs/styleSheets/styleSheet_LabelsDinero_claro.txt", "r")
+    styleSheet = datosStyleSheet.read()
+    datosStyleSheet.close()
+    ventanaPrincipal.labelTuDinero.setStyleSheet(styleSheet)
+    ventanaPrincipal.labelTuDinero_2.setStyleSheet(styleSheet)
+    ventanaPrincipal.labelTuDinero_3.setStyleSheet(styleSheet)
+    ventanaPrincipal.labelTuDinero_4.setStyleSheet(styleSheet)
+    ventanaPrincipal.labelTuDinero_5.setStyleSheet(styleSheet)
+    ventanaPrincipal.labelElegir.setStyleSheet(styleSheet)
+    ventanaPrincipal.labelElegir_2.setStyleSheet(styleSheet)
+    ventanaPrincipal.labelElegir_5.setStyleSheet(styleSheet)
+    ventanaPrincipal.labelElegir_6.setStyleSheet(styleSheet)
+    # Frame arriba y lado
+    ventanaPrincipal.barraArriba.setStyleSheet("QFrame{\nbackground-color: rgb(239, 239, 239);\n}")
+    ventanaPrincipal.barraLateral.setStyleSheet("QFrame{\nbackground-color: rgb(239, 239, 239);\n}")
+    # Contenido
+    ventanaPrincipal.contenido.setStyleSheet("QFrame{\nbackground-color: rgb(255, 255, 255);\n}")
+    # Configuracion
+    ventanaPrincipal.scrollAreaWidgetContents_2.setStyleSheet("background-color: rgb(255, 255, 255);\nborder: none;")
+    # Labels
+    ventanaPrincipal.labelTuCuenta.setStyleSheet("QLabel{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.label_3.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.label_4.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.label_8.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.label_10.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.label_12.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.label_13.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.label_19.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.label_17.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.label_16.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.label_18.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.label_15.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.label_22.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.label_24.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.labelBienvenido.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.labelUsuario.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.labelVersion.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.labelCorrecto.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.relleno.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.titulo.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.texto.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.label_20.setStyleSheet("QFrame{\ncolor: rgb(0, 0, 0);\n}")
+    ventanaPrincipal.labelDinero.setStyleSheet("QLabel{\ncolor: rgb(0, 0, 0);\nborder: none;\npadding: 1px;\n}")
+    ventanaPrincipal.labelDinero_2.setStyleSheet("QLabel{\ncolor: rgb(0, 0, 0);\nborder: none;\npadding: 1px;\n}")
+    ventanaPrincipal.labelDinero_3.setStyleSheet("QLabel{\ncolor: rgb(0, 0, 0);\nborder: none;\npadding: 1px;\n}")
+    ventanaPrincipal.labelDinero_4.setStyleSheet("QLabel{\ncolor: rgb(0, 0, 0);\nborder: none;\npadding: 1px;\n}")
+    ventanaPrincipal.labelDinero_5.setStyleSheet("QLabel{\ncolor: rgb(0, 0, 0);\nborder: none;\npadding: 1px;\n}")
+    ventanaPrincipal.label_31.setStyleSheet("QLabel{\ncolor: rgb(0, 0, 0);\nborder: none;\npadding: 1px;\n}")
+    ventanaPrincipal.label_7.setStyleSheet("QLabel{\ncolor: rgb(0, 0, 0);\nborder: none;\npadding: 1px;\n}")
+    ventanaPrincipal.label_6.setStyleSheet("QLabel{\ncolor: rgb(0, 0, 0);\nborder: none;\npadding: 1px;\n}")
+
+
 # Definir ventanas y otros ajustes
 ventanaSplashScreen = loader.load(ruta+"/UIs/splashScreen.ui", None)
 ventanaIniciarSesion = loader.load(ruta+"/UIs/IniciarSesion.ui", None)
@@ -909,8 +1111,21 @@ ventanaPrincipal.pushButton1000_2.clicked.connect(lambda: comprobadorDinero(1000
 ventanaPrincipal.pushButton10000_2.clicked.connect(lambda: comprobadorDinero(10000))
 ventanaPrincipal.pushButtonSacar.clicked.connect(lambda: comprobadorDineroCustom())
 ventanaPrincipal.lineEdit_3.textChanged.connect(lambda: quitarErrores())
+# CheckBox modo oscuro
+ventanaPrincipal.checkBox_ModoOscuro.clicked.connect(lambda: comprobadorCheckBox4())
+
 
 # Ejecutar app
 splashScreen()
+
+# Comprobar modo oscuro
+abrirModoOscuro = open(ruta+"/Datos/modoOscuro.txt","r")
+estadoModoOscuro = abrirModoOscuro.read()
+abrirModoOscuro.close()
+if estadoModoOscuro == "1":
+    modoOscuro()
+    ventanaPrincipal.checkBox_ModoOscuro.click()
+else:
+   pass
 
 app.exec()
